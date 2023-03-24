@@ -1,9 +1,12 @@
 * {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body, html {
   height: 100%;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 body {
@@ -18,7 +21,6 @@ header, footer {
 }
 
 h2 {
-  font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 2.4rem;
 }
 
