@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+}
+
+body, html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header, footer {
+  margin: 0; 
+  padding: 2px;
+  background-color: #fff;
+}
+
+h2 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 2.4rem;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  column-gap: 5px;
+}
+
+.img-block {
+  display: flex;
+  flex: 1;
+}
+
+img {
+  margin: 0;
+  width: 850px;
+}
+
+.main-by-line {
+  display: flex;
+  position: absolute;
+  top: 40%;
+  left: 50px;
+  background-color: #efefef;
+  padding: 10px;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+}
