@@ -116,15 +116,16 @@ h2 {
 
 .drinkIngredient {
   display: flex;
+  flex-direction: row-reverse;
   text-align: center;
   font-weight: 400;
   gap: 5px;
 }
 .measure-container {
-  text-align: end;
+  text-align: start;
 }
 .ingridients-container {
-  text-align: start;
+  text-align: end;
 }
 
 .drinkInstructions {
