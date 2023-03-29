@@ -61,9 +61,9 @@ h2 {
 }
 
 .img-block {
-  float: right;
+  float: left;
   margin-left: 0px;
-  display: flex;
+  /* display: flex; */
 }
 
 
@@ -136,32 +136,22 @@ h2 {
 }
 
 @media (max-width: 50em) {
-  .container:after {
-    content: '';
-    clear: both;
-  }
-
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .container:after {
-    content: '';
-    clear: both;
+  .img-block {
+    float: none;
   }
 
   .wrapper {
     display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
   }
 
   .wrap {
+    position: relative;
     text-align: center;
     display: flex;
     flex-direction: column;
   }
-
 
 }
