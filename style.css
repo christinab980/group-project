@@ -115,8 +115,16 @@ h2 {
 }
 
 .drinkIngredient {
+  display: flex;
   text-align: center;
-  /* display: none; */
+  font-weight: 400;
+  gap: 5px;
+}
+.measure-container {
+  text-align: end;
+}
+.ingridients-container {
+  text-align: start;
 }
 
 .drinkInstructions {
@@ -155,11 +163,5 @@ h2 {
     flex-direction: column;
   }
 
-  .img-block {
-    display: flex;
-  }
 
-  .img-block img {
-    display: none;
-  }
 }
