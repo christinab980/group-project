@@ -1,13 +1,16 @@
+const allTitles = document.querySelectorAll("[drink-id]");
 const drinkSection = document.getElementById("drink-wrap");
 const drinkIngredient = document.getElementsByClassName("drinkIngredient");
 const fetchUrl = "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
+const results = document.getElementById("results");
 const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
+const searchButton = document.getElementById("search-btn");
+
 const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
-const allTitles = document.querySelectorAll("[drink-id]");
 
 const cocktailsStage = [];
 
@@ -159,6 +162,8 @@ const handleKeyUp = async (e) => {
     );
     const data = await response.json();
     await doOptionsForInput(data);
+    await resultsFromInput(data);
+
   } catch (error) {
     console.log(error);
   }
@@ -167,7 +172,7 @@ const handleKeyUp = async (e) => {
 // GLOBAL FUNCTIONS
 
 async function doOptionsForInput(data) {
-  console.log(data);
+  // console.log(data);
   searchOptions.textContent = "";
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
@@ -175,6 +180,52 @@ async function doOptionsForInput(data) {
     searchOptions.appendChild(optionElement);
   });
 }
+
+async function resultsFromInput(data) {
+  await data.drinks.forEach((result) => {
+    let myDrink = result;
+    // console.log(myDrink.strDrink);
+    // console.log(myDrink.strDrinkThumb);
+    // console.log(myDrink.strInstructions);
+
+    let ingredients = [];
+    let count = 1;
+
+    for(let i in myDrink) {
+      let ingredient = " ";
+      let measure = " ";
+
+      if(i.startsWith("strIngredient") && myDrink[i]) {
+        ingredient = myDrink[i];
+
+        if(myDrink[`strMeasure`+ count]) {
+          measure = myDrink[`strMeasure`+ count];
+        } else {
+          measure = " ";
+        } 
+        count += 1;
+        ingredients.push(`${measure} ${ingredient}`)
+      }
+  }
+  console.log(ingredients)
+  results.innerHTML = `
+    <img src =${myDrink.strDrinkThumb}>
+    <h3> ${myDrink.strDrink} </h2>
+    <h4> Ingredients: </h4>
+    <ul class = "myDrinkIngredients"> </ul>
+    <h4> Instructions: </h4>
+    <p>${myDrink.strInstructions}</p>
+  `;
+  let ingredientsCon =document.querySelector(".myDrinkIngredients");
+  ingredients.forEach((item) => {
+    let listItem = document.createElement("li");
+    listItem.innerText = item;
+    ingredientsCon.append(listItem);
+  })
+});
+}
+
+// searchButton.addEventListener('click', resultsFromInput)
 
 function setCocktailStage(data) {
   data.forEach((item) => {
@@ -187,9 +238,12 @@ const getPageData = async () => {
   //  displayCocktails(cocktailsStage);
   displayCocktailsName(cocktailsStage);
 };
+
 getPageData();
+
 searchOptions.addEventListener("input", (e) => {
   searchInput.value = e.target.value;
 });
+
 searchInput.addEventListener("keyup", handleKeyUp);
 document.addEventListener("click", handleCocktailClick);
