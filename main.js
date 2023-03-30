@@ -8,8 +8,11 @@ const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const allTitles = document.querySelectorAll("[drink-id]");
+const heroImage = document.querySelector("#hero-img");
 
 const cocktailsStage = [];
+const cocltailsSourcesStage = [];
+let heroImagePosition = 0;
 
 const cocktailSettings = {
   url: RANDOM_SELECTION_URL,
@@ -164,6 +167,32 @@ const handleKeyUp = async (e) => {
   }
 };
 
+// PEXELS API
+
+const pexelsSettings = {
+  method: "GET",
+  headers: {
+    Authorization: "cDNlVsBmljR1txSfW6eHvrVgTgCFNcTXE2G5QwdeZHH2fdX1gGNgS33b",
+  },
+};
+const fetchDataPexels = async () => {
+  try {
+    const response = await fetch(
+      "https://api.pexels.com/v1/search?" +
+        new URLSearchParams({ query: "cocktail"}),
+      pexelsSettings
+    );
+    const data = await response.json();
+    const sources = await data.photos;
+    console.log(data)
+
+    setSourcesStage(sources);
+    console.log(cocltailsSourcesStage);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // GLOBAL FUNCTIONS
 
 async function doOptionsForInput(data) {
@@ -182,10 +211,23 @@ function setCocktailStage(data) {
   });
 }
 
+function setSourcesStage(data) {
+  data.forEach((item) => {
+    cocltailsSourcesStage.push(item.src.original);
+  });
+}
+function setIntervalHero() {
+  setInterval(() => {
+    heroImage.src = cocltailsSourcesStage[heroImagePosition];
+    heroImagePosition = (heroImagePosition + 1) % cocltailsSourcesStage.length;
+  }, 10000);
+}
+
 const getPageData = async () => {
   await fetchData();
-  //  displayCocktails(cocktailsStage);
+  await fetchDataPexels();
   displayCocktailsName(cocktailsStage);
+  setIntervalHero();
 };
 getPageData();
 searchOptions.addEventListener("input", (e) => {
