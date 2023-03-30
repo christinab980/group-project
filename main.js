@@ -13,7 +13,11 @@ const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const allTitles = document.querySelectorAll("[drink-id]");
 
+const heroImage = document.querySelector("#hero-img");
+
 const cocktailsStage = [];
+const cocltailsSourcesStage = [];
+let heroImagePosition = 0;
 
 const cocktailsStage = [];
 
@@ -114,6 +118,25 @@ function handleCocktailClick(e) {
     // Render cocktail on the DOM
   }
 }
+}
+
+function handleCocktailClick(e) {
+  const toggleDrink = document.querySelector("#toggle-drink");
+
+  if (e.target.matches("[drink-id]")) {
+    if (toggleDrink) {
+      toggleDrink.remove();
+    }
+    const attribute = e.target.getAttribute("drink-id");
+    // Wipe out the left hand side dom
+    // Get the correct cocktail from cocktailsStage - Done
+    const targetedCocktail = getClickedCocktaild(attribute);
+    const targetedCocktail_tag = e.target;
+    displayCocktails(targetedCocktail, targetedCocktail_tag);
+    console.log(targetedCocktail);
+    // Render cocktail on the DOM
+  }
+}
 
 const getClickedCocktaild = (id) => {
   if (!id) return;
@@ -181,6 +204,32 @@ const handleKeyUp = async (e) => {
   }
 };
 
+// PEXELS API
+
+const pexelsSettings = {
+  method: "GET",
+  headers: {
+    Authorization: "cDNlVsBmljR1txSfW6eHvrVgTgCFNcTXE2G5QwdeZHH2fdX1gGNgS33b",
+  },
+};
+const fetchDataPexels = async () => {
+  try {
+    const response = await fetch(
+      "https://api.pexels.com/v1/search?" +
+        new URLSearchParams({ query: "cocktail"}),
+      pexelsSettings
+    );
+    const data = await response.json();
+    const sources = await data.photos;
+    console.log(data)
+
+    setSourcesStage(sources);
+    console.log(cocltailsSourcesStage);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // GLOBAL FUNCTIONS
 
 async function doOptionsForInput(data) {
@@ -192,6 +241,32 @@ async function doOptionsForInput(data) {
     searchOptions.appendChild(optionElement);
   });
 }
+
+function setCocktailStage(data) {
+  data.forEach((item) => {
+    cocktailsStage.push(item);
+  });
+}
+
+function setSourcesStage(data) {
+  data.forEach((item) => {
+    cocltailsSourcesStage.push(item.src.original);
+  });
+}
+function setIntervalHero() {
+  setInterval(() => {
+    heroImage.src = cocltailsSourcesStage[heroImagePosition];
+    heroImagePosition = (heroImagePosition + 1) % cocltailsSourcesStage.length;
+  }, 10000);
+}
+
+const getPageData = async () => {
+  await fetchData();
+  await fetchDataPexels();
+  displayCocktailsName(cocktailsStage);
+  setIntervalHero();
+};
+getPageData();
 
 async function resultsFromInput(data) {
   await data.drinks.forEach((result) => {
@@ -255,10 +330,10 @@ const getPageData = async () => {
 getPageData();
 
 
+
 searchOptions.addEventListener("input", (e) => {
   searchInput.value = e.target.value;
 });
 
 searchInput.addEventListener("keyup", handleKeyUp);
-
 document.addEventListener("click", handleCocktailClick);
