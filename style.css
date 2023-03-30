@@ -148,6 +148,7 @@ form p {
 .drinkIngredient {
   display: flex;
   flex-direction: row-reverse;
+  text-align: center;
   font-weight: 400;
   gap: 5px;
   text-align: center;
@@ -214,14 +215,17 @@ form p {
   .wrapper {
     display: flex;
     flex-direction: column;
-    height: 100%;
     width: 100%;
+    height: 100%;
   }
 
   .wrap {
+    position: relative;
+    text-align: center;
     display: flex;
     flex-direction: column;
     position: relative;
     text-align: center;
   }
+
 }

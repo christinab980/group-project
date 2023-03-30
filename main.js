@@ -11,6 +11,9 @@ const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
+const allTitles = document.querySelectorAll("[drink-id]");
+
+const cocktailsStage = [];
 
 const cocktailsStage = [];
 
@@ -67,6 +70,15 @@ function displayCocktails(cocktail, parentTag) {
     measure.textContent = item;
     divMeasure.append(measure);
     div2.append(divMeasure);
+  });
+
+  cocktail.measures.forEach((item) => {
+    const ingredient = document.createElement("div");
+    ingredient.textContent = item;
+    divIngridient.append(ingredient);
+    div2.append(divIngridient);
+  });
+
   });
 
   cocktail.measures.forEach((item) => {
@@ -239,11 +251,14 @@ const getPageData = async () => {
   displayCocktailsName(cocktailsStage);
 };
 
+
 getPageData();
+
 
 searchOptions.addEventListener("input", (e) => {
   searchInput.value = e.target.value;
 });
 
 searchInput.addEventListener("keyup", handleKeyUp);
+
 document.addEventListener("click", handleCocktailClick);
