@@ -12,7 +12,6 @@ const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const heroImage = document.querySelector("#hero-img");
 
-const cocktailsStage = [];
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
 
@@ -243,6 +242,7 @@ const getPageData = async () => {
   displayCocktailsName(cocktailsStage);
   setIntervalHero();
 };
+
 getPageData();
 
 async function resultsFromInput(data) {
