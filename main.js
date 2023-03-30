@@ -6,18 +6,15 @@ const results = document.getElementById("results");
 const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
 const searchButton = document.getElementById("search-btn");
-
 const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
-
 const heroImage = document.querySelector("#hero-img");
 
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
 
-const cocktailsStage = [];
 
 const cocktailSettings = {
   url: RANDOM_SELECTION_URL,
@@ -80,7 +77,6 @@ function displayCocktails(cocktail, parentTag) {
     divIngridient.append(ingredient);
     div2.append(divIngridient);
   });
-
 
   cocktail.measures.forEach((item) => {
     const ingredient = document.createElement("div");
@@ -159,6 +155,7 @@ const getCleanDataFromSingleId = (id, stage) => {
     });
   }
 };
+
 // INPUT SECTION
 
 const handleKeyUp = async (e) => {
@@ -190,6 +187,7 @@ const pexelsSettings = {
     Authorization: "cDNlVsBmljR1txSfW6eHvrVgTgCFNcTXE2G5QwdeZHH2fdX1gGNgS33b",
   },
 };
+
 const fetchDataPexels = async () => {
   try {
     const response = await fetch(
@@ -211,7 +209,6 @@ const fetchDataPexels = async () => {
 // GLOBAL FUNCTIONS
 
 async function doOptionsForInput(data) {
-  // console.log(data);
   searchOptions.textContent = "";
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
@@ -231,6 +228,7 @@ function setSourcesStage(data) {
     cocltailsSourcesStage.push(item.src.original);
   });
 }
+
 function setIntervalHero() {
   setInterval(() => {
     heroImage.src = cocltailsSourcesStage[heroImagePosition];
@@ -250,10 +248,6 @@ getPageData();
 async function resultsFromInput(data) {
   await data.drinks.forEach((result) => {
     let myDrink = result;
-    // console.log(myDrink.strDrink);
-    // console.log(myDrink.strDrinkThumb);
-    // console.log(myDrink.strInstructions);
-
     let ingredients = [];
     let count = 1;
 
