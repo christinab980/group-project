@@ -12,7 +12,7 @@ const RANDOM_SELECTION_URL =
 const heroImage = document.querySelector("#hero-img");
 const form = document.querySelector("#form");
 
-const cocktailsStage = []
+const cocktailsStage = [];
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
 
@@ -88,16 +88,19 @@ function displayCocktails(cocktail, parentTag) {
   div3.append(instructions);
   div.append(div3);
   section.append(div);
+
+  createCloseBtn(div)
 }
 
 function handleCocktailClick(e) {
-  const toggleDrink = document.querySelector("#toggle-drink");
+  const toggleDrink = document.querySelector("#toggle-drink")
+  const attribute = e.target.getAttribute("drink-id");
+
 
   if (e.target.matches("[drink-id]")) {
     if (toggleDrink) {
       toggleDrink.remove();
     }
-    const attribute = e.target.getAttribute("drink-id");
     // Wipe out the left hand side dom
     // Get the correct cocktail from cocktailsStage - Done
     const targetedCocktail = getClickedCocktaild(attribute);
@@ -176,10 +179,14 @@ const handleKeyUp = async (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   const query = searchInput.value;
-  const options = document.querySelectorAll("option");
+const results = document.querySelector("#results")
+
   if (!query) {
     searchOptions.innerHTML = "";
     return;
+  }
+  if(results){
+    results.remove()
   }
   try {
     const response = await fetch(
@@ -188,6 +195,7 @@ const handleSubmit = async (e) => {
     );
     const data = await response.json();
     await resultsFromInput(data);
+    searchInput.value = ""
   } catch (error) {
     console.log(error);
   }
@@ -219,6 +227,18 @@ const fetchDataPexels = async () => {
 };
 
 // GLOBAL FUNCTIONS
+
+const createCloseBtn = (parentTag) => {
+  const iconDiv = document.createElement("div");
+  iconDiv.id = "icon";
+  iconDiv.className = "icon";
+  for (let i = 0; i < 3; i++) {
+    const span = document.createElement("span");
+    span.classList = "icon-arrow"
+    iconDiv.append(span);
+  }
+  parentTag.insertBefore(iconDiv, parentTag.children[0]);
+};
 
 async function doOptionsForInput(data) {
   searchOptions.textContent = "";
@@ -260,11 +280,12 @@ getPageData();
 async function resultsFromInput(data) {
   const topDrinks = document.querySelector("#top-drinks");
   if (topDrinks) {
-    topDrinks.remove()
+    topDrinks.remove();
   }
   console.log(data);
   const results = document.createElement("div");
-  results.className = "results"
+  results.className = "results";
+  results.id = "results"
   drinkSection.append(results);
   await data.drinks.forEach((result) => {
     let myDrink = result;
@@ -302,7 +323,7 @@ async function resultsFromInput(data) {
       ingredientsCon.append(listItem);
     });
   });
-  console.log(drinkSection, results);
+  createCloseBtn(results);
 }
 
 // searchButton.addEventListener('click', resultsFromInput)
@@ -319,3 +340,26 @@ searchOptions.addEventListener("input", (e) => {
 form.addEventListener("submit", handleSubmit);
 searchInput.addEventListener("keyup", handleKeyUp);
 document.addEventListener("click", handleCocktailClick);
+document.addEventListener("click", handleBtnClose);
+
+function handleBtnClose(e) {
+const icon = document.querySelector("#icon");
+const results = document.querySelector("#results")
+const toggleDrink = document.querySelector("#toggle-drink")
+  if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
+    icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
+    setTimeout(()=> {
+      if(results){
+        results.remove()
+    displayCocktailsName(cocktailsStage, allTitles);
+    return
+      }
+      if(toggleDrink){
+        toggleDrink.remove()
+
+        return
+      }
+
+    },500)
+  }
+}
