@@ -36,13 +36,16 @@ const fetchData = async () => {
 };
 
 const displayCocktailsName = (cocktail) => {
+  const drinkSection_child = document.createElement("div")
+  drinkSection_child.id = "top-drinks"
   cocktail.forEach((item) => {
     const div = document.createElement("div");
     div.className = "drink";
     div.textContent = item.strDrink;
     div.setAttribute("drink-id", item.idDrink);
-    drinkSection.append(div);
+    drinkSection_child.append(div);
   });
+  drinkSection.append(drinkSection_child)
 };
 
 function displayCocktails(cocktail, parentTag) {
@@ -232,7 +235,7 @@ function setIntervalHero() {
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
-  displayCocktailsName(cocktailsStage);
+  displayCocktailsName(cocktailsStage, allTitles);
   setIntervalHero();
 };
 
