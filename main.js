@@ -2,7 +2,6 @@ const allTitles = document.querySelectorAll("[drink-id]");
 const drinkSection = document.getElementById("drink-wrap");
 const drinkIngredient = document.getElementsByClassName("drinkIngredient");
 const fetchUrl = "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
-const results = document.getElementById("results");
 const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
 const searchButton = document.getElementById("search-btn");
@@ -11,10 +10,10 @@ const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const heroImage = document.querySelector("#hero-img");
+const form = document.querySelector("#form");
 
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
-
 
 const cocktailSettings = {
   url: RANDOM_SELECTION_URL,
@@ -36,13 +35,16 @@ const fetchData = async () => {
 };
 
 const displayCocktailsName = (cocktail) => {
+  const drinkSection_child = document.createElement("div");
+  drinkSection_child.id = "top-drinks";
   cocktail.forEach((item) => {
     const div = document.createElement("div");
     div.className = "drink";
     div.textContent = item.strDrink;
     div.setAttribute("drink-id", item.idDrink);
-    drinkSection.append(div);
+    drinkSection_child.append(div);
   });
+  drinkSection.append(drinkSection_child);
 };
 
 function displayCocktails(cocktail, parentTag) {
@@ -172,8 +174,26 @@ const handleKeyUp = async (e) => {
     );
     const data = await response.json();
     await doOptionsForInput(data);
-    await resultsFromInput(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const query = searchInput.value;
+  const options = document.querySelectorAll("option");
+  if (!query) {
+    searchOptions.innerHTML = "";
+    return;
+  }
+  try {
+    const response = await fetch(
+      `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+      cocktailSettings
+    );
+    const data = await response.json();
+    await resultsFromInput(data);
   } catch (error) {
     console.log(error);
   }
@@ -192,15 +212,13 @@ const fetchDataPexels = async () => {
   try {
     const response = await fetch(
       "https://api.pexels.com/v1/search?" +
-        new URLSearchParams({ query: "cocktail"}),
+        new URLSearchParams({ query: "cocktail" }),
       pexelsSettings
     );
     const data = await response.json();
     const sources = await data.photos;
-    console.log(data)
 
     setSourcesStage(sources);
-    console.log(cocltailsSourcesStage);
   } catch (error) {
     console.log(error);
   }
@@ -239,36 +257,43 @@ function setIntervalHero() {
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
-  displayCocktailsName(cocktailsStage);
+  displayCocktailsName(cocktailsStage, allTitles);
   setIntervalHero();
 };
 
 getPageData();
 
 async function resultsFromInput(data) {
+  const topDrinks = document.querySelector("#top-drinks");
+  if (topDrinks) {
+    topDrinks.remove()
+  }
+  console.log(data);
+  const results = document.createElement("div");
+  results.className = "results"
+  drinkSection.append(results);
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
     let count = 1;
 
-    for(let i in myDrink) {
+    for (let i in myDrink) {
       let ingredient = " ";
       let measure = " ";
 
-      if(i.startsWith("strIngredient") && myDrink[i]) {
+      if (i.startsWith("strIngredient") && myDrink[i]) {
         ingredient = myDrink[i];
 
-        if(myDrink[`strMeasure`+ count]) {
-          measure = myDrink[`strMeasure`+ count];
+        if (myDrink[`strMeasure` + count]) {
+          measure = myDrink[`strMeasure` + count];
         } else {
           measure = " ";
-        } 
+        }
         count += 1;
-        ingredients.push(`${measure} ${ingredient}`)
+        ingredients.push(`${measure} ${ingredient}`);
       }
-  }
-  console.log(ingredients)
-  results.innerHTML = `
+    }
+    results.innerHTML = `
     <img src =${myDrink.strDrinkThumb}>
     <h3> ${myDrink.strDrink} </h2>
     <h4> Ingredients: </h4>
@@ -276,13 +301,14 @@ async function resultsFromInput(data) {
     <h4> Instructions: </h4>
     <p>${myDrink.strInstructions}</p>
   `;
-  let ingredientsCon =document.querySelector(".myDrinkIngredients");
-  ingredients.forEach((item) => {
-    let listItem = document.createElement("li");
-    listItem.innerText = item;
-    ingredientsCon.append(listItem);
-  })
-});
+    let ingredientsCon = document.querySelector(".myDrinkIngredients");
+    ingredients.forEach((item) => {
+      let listItem = document.createElement("li");
+      listItem.innerText = item;
+      ingredientsCon.append(listItem);
+    });
+  });
+  console.log(drinkSection, results);
 }
 
 // searchButton.addEventListener('click', resultsFromInput)
@@ -296,6 +322,6 @@ function setCocktailStage(data) {
 searchOptions.addEventListener("input", (e) => {
   searchInput.value = e.target.value;
 });
-
+form.addEventListener("submit", handleSubmit);
 searchInput.addEventListener("keyup", handleKeyUp);
 document.addEventListener("click", handleCocktailClick);
