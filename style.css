@@ -7,6 +7,7 @@
 body, html, main {
   font-family: Georgia, 'Times New Roman', Times, serif;
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 header {
@@ -141,12 +142,14 @@ form p {
   border-radius: 10px;
   cursor: pointer;
   display: flex;
+  position: relative;
   flex-direction: column;
   font-size: 1rem;
   font-weight: 600;
   justify-content: center;
   margin: 15px;
   padding: 20px;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55)
 }
 
 .drink img {
@@ -181,6 +184,11 @@ form p {
 }
 
 .results {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: #575a7b;
   line-height: 1.5em;
 }
@@ -215,6 +223,75 @@ form p {
   border-radius: 10px;
   height: 200px;
   margin: 10px;
+}
+
+/* Close Btn result */
+
+.icon {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: -40px;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 1.5s cubic-bezier(0, 0, 0.79, 0.24);
+  cursor: pointer;
+}
+.icon.open {
+  transform: translateX(-500px);
+  transition: 10 ease;
+} 
+
+.icon span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 23px;
+  height: 8px;
+  width: 100%;
+  background: #575a7b;
+  border-radius: 4px;
+  transform: rotate(0deg);
+  transition: .2s ease-in-out;
+}
+
+.icon span:nth-child(1),
+.icon span:nth-child(3) {
+  width: 50%;
+  transform: rotate(45deg);
+}
+
+.icon span:nth-child(1) {
+  left: 3px;
+  top: 15px;
+}
+
+.icon span:nth-child(2) {
+  transform: rotate(-45deg);
+}
+
+.icon span:nth-child(3) {
+  left: 20px;
+  top: 31px;
+}
+
+.icon.open span:nth-child(1),
+.icon.open span:nth-child(3) {
+    left: -1px;
+}
+
+.icon.open span:nth-child(1) {
+  top: 15px;
+  transform: rotate(135deg);
+}
+
+.icon.open span:nth-child(2) {
+  transform: rotate(0deg);
+}
+
+.icon.open span:nth-child(3) {
+  top: 31px;
+  transform: rotate(45deg);
 }
 
 @media (max-width: 50em) {
