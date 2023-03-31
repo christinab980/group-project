@@ -12,6 +12,7 @@ const RANDOM_SELECTION_URL =
 const heroImage = document.querySelector("#hero-img");
 const form = document.querySelector("#form");
 
+const cocktailsStage = []
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
 
