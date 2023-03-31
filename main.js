@@ -80,6 +80,13 @@ function displayCocktails(cocktail, parentTag) {
     div2.append(divIngridient);
   });
 
+  cocktail.measures.forEach((item) => {
+    const ingredient = document.createElement("div");
+    ingredient.textContent = item;
+    divIngridient.append(ingredient);
+    div2.append(divIngridient);
+  });
+
   div.append(div2);
   const div3 = document.createElement("div");
   div3.className = "drinkInstructions";
