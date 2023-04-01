@@ -306,6 +306,7 @@ function handleFavoriteListOutput(e) {
       topDrinks.remove()
     }
     createFavoritesOutputDisplay(values)
+    console.log(values)
   }
 }
 
@@ -351,6 +352,7 @@ function createFavoritesOutputDisplay(cocktailNames){
   drinkSection.append(parentDiv)
 }
 
+
 async function handleSingleFavoriteCocktail(e) {
   if(e.target.matches("#favorite-drink")){
     const query = e.target.textContent
@@ -367,6 +369,7 @@ async function handleSingleFavoriteCocktail(e) {
     }
   }
 }
+
 
 const getPageData = async () => {
   await fetchData();
@@ -450,7 +453,6 @@ document.addEventListener("click", handleBtnClose);
 document.addEventListener("click",handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
 document.addEventListener("click", handleSingleFavoriteCocktail)
-
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
