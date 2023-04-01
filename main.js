@@ -11,10 +11,13 @@ const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const heroImage = document.querySelector("#hero-img");
 const form = document.querySelector("#form");
+const heartNav = document.querySelector("#heart-nav-bar")
 
 const cocktailsStage = [];
 const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
+let heartStage = 0
+let favoriteHeartStorage = []
 
 const cocktailSettings = {
   url: RANDOM_SELECTION_URL,
@@ -55,6 +58,7 @@ function displayCocktails(cocktail, parentTag) {
   const div = document.createElement("div");
   div.className = "drink";
   div.id = "toggle-drink";
+  div.dataset.value = cocktail.strDrink 
 
   const img = document.createElement("img");
   img.src = cocktail.strDrinkThumb;
@@ -90,6 +94,7 @@ function displayCocktails(cocktail, parentTag) {
   section.append(div);
 
   createCloseBtn(div)
+  createHeartBtn(div)
 }
 
 function handleCocktailClick(e) {
@@ -268,11 +273,90 @@ function setIntervalHero() {
   }, 10000);
 }
 
+function setLocalStorageDrink(attribute) {
+  // Add a class name for heart "red"
+  // Add +1 to heart icon displayed in the nav bar
+    localStorage.setItem(`${attribute}`, `${attribute}`)
+}
+
+function handleHeart(e) {
+  // This function is adding but not substracting 
+  // We need to create an attribute to avoid adding multimple favorite numbers
+  if(e.target.matches("[favoritebtn]")){
+    const attribute = e.target.parentNode.dataset.value
+    heartStage += 1
+    heartNav.textContent = heartStage
+    setLocalStorageDrink(attribute)
+  }
+}
+
+function onLoadFavorites() {
+  const storageKeys = allStorage()
+  storageKeys.forEach(item => {
+    favoriteHeartStorage.push(item)
+  })
+  heartNav.textContent = storageKeys.length
+}
+
+function handleFavoriteListOutput(e) {
+  const topDrinks = document.querySelector("#top-drinks")
+  if(e.target.matches("#favorite-heart")){
+    const values = favoriteHeartStorage
+    if(topDrinks){
+      topDrinks.remove()
+    }
+    createFavoritesOutputDisplay(values)
+    console.log(values)
+  }
+}
+
+function favoriteListOutput() {
+
+}
+
+function allStorage() {
+  let values = [],
+      keys = Object.keys(localStorage),
+      i = keys.length;
+
+  while ( i-- ) {
+      values.push( localStorage.getItem(keys[i]) );
+  }
+
+  return values;
+}
+
+function createHeartBtn(parentTag) {
+  const heartDiv = document.createElement("div")
+  heartDiv.textContent = "a"
+  heartDiv.setAttribute("favoriteBtn","")
+  heartDiv.className = "favoriteBtn"
+  parentTag.append(heartDiv)
+}
+
+function createFavoritesOutputDisplay(cocktailNames){
+
+  const parentDiv = document.createElement("div")
+  parentDiv.className = "favorite-container"
+  parentDiv.id = "favorite-container"
+
+  cocktailNames.forEach(item => {
+    const div = document.createElement("div")
+    div.className = "drink"
+    div.textContent = item
+    parentDiv.append(div)
+  })
+
+
+  drinkSection.append(parentDiv)
+}
+
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
   displayCocktailsName(cocktailsStage, allTitles);
   setIntervalHero();
+  onLoadFavorites();
 };
 
 getPageData();
@@ -341,6 +425,8 @@ form.addEventListener("submit", handleSubmit);
 searchInput.addEventListener("keyup", handleKeyUp);
 document.addEventListener("click", handleCocktailClick);
 document.addEventListener("click", handleBtnClose);
+document.addEventListener("click",handleHeart);
+document.addEventListener("click", handleFavoriteListOutput);
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
@@ -363,3 +449,5 @@ const toggleDrink = document.querySelector("#toggle-drink")
     },500)
   }
 }
+
+console.log(allStorage())
