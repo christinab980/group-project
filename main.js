@@ -306,7 +306,6 @@ function handleFavoriteListOutput(e) {
       topDrinks.remove()
     }
     createFavoritesOutputDisplay(values)
-    console.log(values)
   }
 }
 
@@ -343,12 +342,30 @@ function createFavoritesOutputDisplay(cocktailNames){
   cocktailNames.forEach(item => {
     const div = document.createElement("div")
     div.className = "drink"
+    div.id = "favorite-drink"
     div.textContent = item
     parentDiv.append(div)
   })
 
 
   drinkSection.append(parentDiv)
+}
+
+async function handleSingleFavoriteCocktail(e) {
+  if(e.target.matches("#favorite-drink")){
+    const query = e.target.textContent
+    try {
+      const response = await fetch(
+        `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+        cocktailSettings
+      );
+      const data = await response.json();
+      console.log(data)
+      resultsFromInput(data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 const getPageData = async () => {
@@ -363,11 +380,16 @@ getPageData();
 
 async function resultsFromInput(data) {
   const topDrinks = document.querySelector("#top-drinks");
+  const favoriteContainer = document.querySelector("#favorite-container")
+  const results = document.createElement("div");
   if (topDrinks) {
     topDrinks.remove();
   }
+  if(favoriteContainer){
+    favoriteContainer.remove()
+    drinkSection.dataset.favorite = true
+  }
   console.log(data);
-  const results = document.createElement("div");
   results.className = "results";
   results.id = "results"
   drinkSection.append(results);
@@ -427,6 +449,8 @@ document.addEventListener("click", handleCocktailClick);
 document.addEventListener("click", handleBtnClose);
 document.addEventListener("click",handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
+document.addEventListener("click", handleSingleFavoriteCocktail)
+
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
@@ -435,6 +459,12 @@ const toggleDrink = document.querySelector("#toggle-drink")
   if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
     icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
     setTimeout(()=> {
+      if(drinkSection.dataset.favorite == "true"){
+        results.remove()
+        createFavoritesOutputDisplay(favoriteHeartStorage)
+        drinkSection.dataset.favorite = false
+        return
+      }
       if(results){
         results.remove()
     displayCocktailsName(cocktailsStage, allTitles);
