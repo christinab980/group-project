@@ -12,6 +12,8 @@ const RANDOM_SELECTION_URL =
 const heroImage = document.querySelector("#hero-img");
 const form = document.querySelector("#form");
 const heartNav = document.querySelector("#heart-nav-bar")
+const results = document.querySelector("#results")
+
 
 const cocktailsStage = [];
 const cocltailsSourcesStage = [];
@@ -184,7 +186,6 @@ const handleKeyUp = async (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   const query = searchInput.value;
-const results = document.querySelector("#results")
 
   if (!query) {
     searchOptions.innerHTML = "";
@@ -284,9 +285,13 @@ function handleHeart(e) {
   // We need to create an attribute to avoid adding multimple favorite numbers
   if(e.target.matches("[favoritebtn]")){
     const attribute = e.target.parentNode.dataset.value
-    heartStage += 1
-    heartNav.textContent = heartStage
-    setLocalStorageDrink(attribute)
+    const localStorageDrinks = allStorage()
+    const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
+    if(!isDrinkInFavorites){
+      heartStage += 1
+      heartNav.textContent = heartStage + favoriteHeartStorage.length
+      setLocalStorageDrink(attribute)
+    }
   }
 }
 
@@ -300,10 +305,18 @@ function onLoadFavorites() {
 
 function handleFavoriteListOutput(e) {
   const topDrinks = document.querySelector("#top-drinks")
+  const favoriteContainer = document.querySelector("#favorite-container")
+const results = document.querySelector("#results")
+
   if(e.target.matches("#favorite-heart")){
-    const values = favoriteHeartStorage
+    const values = allStorage()
+    if(values.length === 0) return
+    if(favoriteContainer)return
     if(topDrinks){
       topDrinks.remove()
+    }
+    if(results){
+      results.remove()
     }
     createFavoritesOutputDisplay(values)
     console.log(values)
@@ -328,17 +341,44 @@ function allStorage() {
 
 function createHeartBtn(parentTag) {
   const heartDiv = document.createElement("div")
-  heartDiv.textContent = "a"
   heartDiv.setAttribute("favoriteBtn","")
   heartDiv.className = "favoriteBtn"
   parentTag.append(heartDiv)
+
+  const span = document.createElement("span")
+  span.textContent = "Favorite"
+  heartDiv.append(span)
+
+  const heartContainer = document.createElement("div")
+  heartContainer.className = "heart-container"
+  heartDiv.append(heartContainer)
+
+  const heartIcon = document.createElement("i")
+  heartIcon.className = "fa-regular fa-heart fa-lg"
+  heartContainer.append(heartIcon)
+}
+
+function createRemoveFavorite(parentTag) {
+  const heartRemoveDiv = document.createElement("div")
+  heartRemoveDiv.className = "heart-remove-container"
+  heartRemoveDiv.id = "heart-remove-container"
+  parentTag.append(heartRemoveDiv)
+
+  const removeHeartIcon = document.createElement("i")
+  removeHeartIcon.className = "fa-solid fa-heart-circle-minus fa-xl"
+  // removeHeartIcon.className = "remove-heart-icon"
+  heartRemoveDiv.append(removeHeartIcon)
 }
 
 function createFavoritesOutputDisplay(cocktailNames){
 
   const parentDiv = document.createElement("div")
-  parentDiv.className = "favorite-container"
+  parentDiv.className = "drink-wrap"
   parentDiv.id = "favorite-container"
+
+  // const h3 = document.querySelector("h2")
+  // h3.textContent = "Your favorite drinks"
+  // drinkSection.insertBefore(h3, parentDiv.children[0])
 
   cocktailNames.forEach(item => {
     const div = document.createElement("div")
@@ -370,6 +410,13 @@ async function handleSingleFavoriteCocktail(e) {
   }
 }
 
+
+
+function handleRemoveFavoriteDrink(e) {
+  if(e.target.matches("#heart-remove-container")){
+
+  }
+}
 
 const getPageData = async () => {
   await fetchData();
@@ -433,6 +480,7 @@ async function resultsFromInput(data) {
     });
   });
   createCloseBtn(results);
+  createRemoveFavorite(results)
 }
 
 // searchButton.addEventListener('click', resultsFromInput)
@@ -453,6 +501,8 @@ document.addEventListener("click", handleBtnClose);
 document.addEventListener("click",handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
 document.addEventListener("click", handleSingleFavoriteCocktail)
+document.addEventListener("click", handleRemoveFavoriteDrink)
+
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
@@ -482,4 +532,4 @@ const toggleDrink = document.querySelector("#toggle-drink")
   }
 }
 
-console.log(allStorage())
+console.log(allStorage());

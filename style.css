@@ -12,6 +12,8 @@ body, html, main {
 
 header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: #323232; 
   overflow: hidden;
   padding: 10px 5px;
@@ -36,6 +38,13 @@ header a {
 
 header a:hover, footer a:hover {
   color: #0d80b6;
+}
+
+.header-right-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 34px;
 }
 
 header img {
@@ -216,6 +225,11 @@ form p {
   justify-content: center;
 }
 
+.drink-wrap-favorite h2 {
+ width: 100%;
+ margin: 20px auto;
+}
+
 #top-drinks {
   display: flex;
   flex-wrap: wrap;
@@ -277,6 +291,7 @@ form p {
   align-items: center;
   color: #575a7b;
   line-height: 1.5em;
+  width: 80%;
 }
 
 .results h3 {
@@ -321,8 +336,8 @@ form p {
   width: 50px;
   height: 50px;
   position: absolute;
-  top: -40px;
-  left: 0;
+  top: 0;
+  left: 20px;
   transform: rotate(0deg);
   transition: 1.5s cubic-bezier(0, 0, 0.79, 0.24);
   cursor: pointer;
@@ -337,7 +352,7 @@ form p {
   position: absolute;
   left: 0;
   top: 23px;
-  height: 8px;
+  height: 4px;
   width: 100%;
   background: #575a7b;
   border-radius: 4px;
@@ -382,6 +397,103 @@ form p {
 .icon.open span:nth-child(3) {
   top: 31px;
   transform: rotate(45deg);
+}
+
+/* Heart Icon */
+
+.heart-container{
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 34px;
+  height: 34px;
+}
+
+.blink:hover {
+  transform: scale(1.1);
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%{
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 2px);
+  }
+}
+
+.fa-heart:hover {
+  color: #e03c4cae;
+}
+
+.heart-counter-container{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e03c4d;
+  top: -6px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.heart-container span {
+  color: #000000;
+  line-height: 0;
+}
+
+/* Add heart icon */
+
+.favoriteBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  padding: 18px 24px;
+}
+
+.favoriteBtn:hover {
+  border-color: #000000;
+}
+
+.favoriteBtn img {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.heart-container-add {
+  display: flex;
+
+}
+
+/* Remove heart Icon */
+
+.heart-remove-container {
+  /* position: absolute; */
+  margin-top: 14px;
+  cursor: pointer;
+  top: -40px;
+  right: 40px;
+  width: 38px;
+  overflow: hidden;
+  color: #000;
+}
+
+.fa-2xl {
+  line-height: 1;
+}
+
+.fa-heart-circle-minus:hover {
+  color: #00000057;
 }
 
 @media (max-width: 50em) {
