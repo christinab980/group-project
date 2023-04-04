@@ -411,11 +411,13 @@ async function handleSingleFavoriteCocktail(e) {
 }
 
 
+
 function handleRemoveFavoriteDrink(e) {
   if(e.target.matches("#heart-remove-container")){
 
   }
 }
+
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
@@ -500,6 +502,7 @@ document.addEventListener("click",handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
 document.addEventListener("click", handleSingleFavoriteCocktail)
 document.addEventListener("click", handleRemoveFavoriteDrink)
+
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
