@@ -496,22 +496,83 @@ form p {
   color: #00000057;
 }
 
+.about-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 40px;
+  gap: 50px;
+}
+
+.group-member-1, .group-member-2 {
+  display: flex;
+}
+
+
+.about-picture {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.about-picture img {
+  height: 300px;
+}
+
+.about-caption {
+  display: flex;
+  flex: 2;
+  align-items: center;
+}
+
+.favorite-page-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-page-header img {
+  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.favorite-page-h2 {
+  margin: 25px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 @media (max-width: 50em) {
+  .img-block img {
+    height: 30vh;
+    width: 100vw;
+  }
+
   .img-block {
-    float: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrapper > div {
+    height: auto;
   }
 
   .wrapper {
-    display: flex;
-    width: 100%;
+    width: 100vw;
     height: 100%;
   }
 
   .wrap {
-    position: relative;
-    text-align: center;
     display: flex;
-    flex-direction: column;
+    text-align: center;
+    margin-top: 20%;
+    max-height: 60vh;
+    width: 100vw;
+  }
+
+  form {
+    width: 100vw;
   }
 
   header  {
@@ -524,7 +585,7 @@ form p {
   }
 
   footer {
-    margin-top: 70px;
+    margin-top: 30%;
     display: flex;
     flex-wrap: wrap;
   }
@@ -544,10 +605,6 @@ form p {
     border-radius: 15px;
     margin: 8px;
     width: 150px;
-  }
-
-  .drink {
-    background-color: #fff;
   }
 
   .icon {
