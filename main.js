@@ -410,15 +410,12 @@ async function handleSingleFavoriteCocktail(e) {
   }
 }
 
-<<<<<<< HEAD
-=======
+
 function handleRemoveFavoriteDrink(e) {
   if(e.target.matches("#heart-remove-container")){
 
   }
 }
->>>>>>> d0374bb (add heartButton for tracking favorites)
-
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
@@ -532,4 +529,4 @@ const toggleDrink = document.querySelector("#toggle-drink")
   }
 }
 
-console.log(allStorage())
+console.log(allStorage());
