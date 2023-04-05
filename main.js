@@ -9,9 +9,8 @@ const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
-const heroImage = document.querySelector("#hero-img");
 const form = document.querySelector("#form");
-const heartNav = document.querySelector("#heart-nav-bar")
+
 const results = document.querySelector("#results")
 
 
@@ -34,6 +33,7 @@ const fetchData = async () => {
   try {
     const response = await fetch(cocktailSettings.url, cocktailSettings);
     const data = await response.json();
+    console.log(data)
     setCocktailStage(data.drinks);
   } catch (error) {
     console.log(error);
@@ -211,6 +211,7 @@ const handleSubmit = async (e) => {
 
 const pexelsSettings = {
   method: "GET",
+  url: 'https://api.pexels.com/videos/videos/5816529',
   headers: {
     Authorization: "cDNlVsBmljR1txSfW6eHvrVgTgCFNcTXE2G5QwdeZHH2fdX1gGNgS33b",
   },
@@ -261,6 +262,12 @@ function setCocktailStage(data) {
   });
 }
 
+function setCocktailStage(data) {
+  data.forEach((item) => {
+    cocktailsStage.push(item);
+  });
+}
+
 function setSourcesStage(data) {
   data.forEach((item) => {
     cocltailsSourcesStage.push(item.src.original);
@@ -268,6 +275,7 @@ function setSourcesStage(data) {
 }
 
 function setIntervalHero() {
+const heroImage = document.querySelector("#hero-img");
   setInterval(() => {
     heroImage.src = cocltailsSourcesStage[heroImagePosition];
     heroImagePosition = (heroImagePosition + 1) % cocltailsSourcesStage.length;
@@ -295,7 +303,8 @@ function handleHeart(e) {
   }
 }
 
-function onLoadFavorites() {
+function loadFavoriteCounter() {
+  const heartNav = document.querySelector("#heart-nav-bar")
   const storageKeys = allStorage()
   storageKeys.forEach(item => {
     favoriteHeartStorage.push(item)
@@ -321,10 +330,6 @@ const results = document.querySelector("#results")
     createFavoritesOutputDisplay(values)
     console.log(values)
   }
-}
-
-function favoriteListOutput() {
-
 }
 
 function allStorage() {
@@ -411,19 +416,27 @@ async function handleSingleFavoriteCocktail(e) {
 }
 
 
-
 function handleRemoveFavoriteDrink(e) {
   if(e.target.matches("#heart-remove-container")){
 
   }
 }
 
+function handleLogoHome(e) {
+  const app = document.querySelector("#app")
+  if(e.target.matches("#logo-home-page")){
+    if(app){
+      app.remove()
+      createApp()
+      createHomePage()
+    }
+  }
+}
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
-  displayCocktailsName(cocktailsStage, allTitles);
-  setIntervalHero();
-  onLoadFavorites();
+  await createHomePage()
+  // displayCocktailsName(cocktailsStage, allTitles);
 };
 
 getPageData();
@@ -483,26 +496,257 @@ async function resultsFromInput(data) {
   createRemoveFavorite(results)
 }
 
-// searchButton.addEventListener('click', resultsFromInput)
+// HEADER AND FOOTER 
+function createHeader() {
 
-function setCocktailStage(data) {
-  data.forEach((item) => {
-    cocktailsStage.push(item);
-  });
+  const app = document.querySelector("#app")
+  const header = document.createElement("header")
+  header.className = "padding-sides"
+  //Nav Section
+
+  const navTag = document.createElement("nav")
+  const imgLogo = document.createElement("img")
+  imgLogo.src = "/img/Logo.png"
+  imgLogo.alt = "Digital-crafts-news"
+  imgLogo.id = "logo-home-page"
+  header.append(imgLogo)
+
+  const aTopTen = document.createElement("a")
+  aTopTen.id = "top-ten-page"
+  aTopTen.textContent = "top ten"
+  navTag.append(aTopTen)
+
+  const aSearchDrink = document.createElement("a")
+  aSearchDrink.id = "search-drink-page"
+  aSearchDrink.textContent = "search"
+  navTag.append(aSearchDrink)
+
+  const aAboutPage = document.createElement("a")
+  aAboutPage.id = "about-page"
+  aAboutPage.textContent = "about"
+  navTag.append(aAboutPage)
+
+  //Favorite Heart Icon
+  const divRightContainer = document.createElement("div")
+  divRightContainer.className = "header-right-container"
+
+  const divHeart = document.createElement("div")
+  divHeart.className = "heart-container blink"
+
+  const i = document.createElement("i")
+  i.className = "fa-regular fa-heart fa-2xl"
+  i.id = "favorite-heart"
+  divHeart.append(i)
+
+  const divHeartCounter = document.createElement("div")
+  divHeartCounter.className = "heart-counter-container"
+  divHeart.append(divHeartCounter)
+  
+  const span = document.createElement("span")
+  span.className = "heart-counter"
+  span.id = "heart-nav-bar"
+  span.textContent = "0"
+  divHeartCounter.append(span)
+  
+
+  divRightContainer.append(divHeart)
+  navTag.append(divRightContainer)
+  // Append all to header
+  header.append(navTag)
+  // header.append(divRightContainer)
+  app.insertBefore(header, app.children[0])
 }
 
-searchOptions.addEventListener("input", (e) => {
-  searchInput.value = e.target.value;
-});
-form.addEventListener("submit", handleSubmit);
-searchInput.addEventListener("keyup", handleKeyUp);
+function createFooter() {
+  const app = document.querySelector("#app")
+  const footer = document.createElement("footer")
+  footer.className = "padding-sides"
+  const firstDiv = document.createElement("div")
+  const nav = document.createElement("nav")
+
+  const imgLogo = document.createElement("img")
+  imgLogo.src = "/img/Logo.png"
+  imgLogo.id = "logo-home-page"
+  imgLogo.alt = "Digital-crafts-news"
+  firstDiv.append(imgLogo)
+
+  const aTopTen = document.createElement("a")
+  aTopTen.id = "top-ten-page"
+  aTopTen.textContent = "top ten"
+  nav.append(aTopTen)
+
+  const aSearchDrink = document.createElement("a")
+  aSearchDrink.id = "search-drink-page"
+  aSearchDrink.textContent = "search"
+  nav.append(aSearchDrink)
+
+  const aAboutPage = document.createElement("a")
+  aAboutPage.id = "about-page"
+  aAboutPage.textContent = "about"
+  nav.append(aAboutPage)
+
+  firstDiv.append(nav)
+
+  const socialDiv = document.createElement("div")
+  socialDiv.className = "footer-inner"
+
+  const p = document.createElement("p")
+  p.textContent = "Follow us on Socials!"
+  socialDiv.append(p)
+
+  const divSocialsChild = document.createElement("div")
+  divSocialsChild.className = "socials"
+  socialDiv.append(divSocialsChild)
+
+  const imgGitHub = document.createElement("img")
+  imgGitHub.src = "./img/github_icon.png"
+  imgGitHub.alt = "git hub icon"
+  divSocialsChild.append(imgGitHub)
+  footer.append(firstDiv)
+  footer.append(socialDiv)
+
+  app.insertBefore(footer, app.children[2])
+}
+// HOME PAGE
+async function createHomePage() {
+  const app = document.querySelector("#app")
+  const main = document.createElement("main")
+  main.className = "home-page"
+  app.append(main)
+
+  createHeader()
+  createFooter()
+  heroSectionHomePage(main)
+  subTitleHomePage(main)
+  await getVideo(main)
+  sectionHomePage(main, "vodka")
+  sectionHomePage(main, "rum")
+  await getSectionCocktail("vodka")
+  await getSectionCocktail("rum")
+  setIntervalHero()
+  loadFavoriteCounter()
+}
+
+function heroSectionHomePage(parentTag) {
+  const sectionHeroImg = document.createElement("section")
+  sectionHeroImg.className = "img-block"
+  parentTag.append(sectionHeroImg)
+
+  const img = document.createElement("img")
+  img.id = "hero-img"
+  img.src = "/img/letsfrolictogether_20140324_0037-1000x650-3.jpg"
+  img.alt = "Set of cocktail images"
+  sectionHeroImg.append(img)
+
+  const h2Hero = document.createElement("h2")
+  h2Hero.textContent = "THE MIXOLOGY MASTER"
+  sectionHeroImg.append(h2Hero)
+}
+
+function subTitleHomePage(parentTag) {
+  const sectionText = document.createElement("section")
+  sectionText.className = "sub-title-text padding-sides"
+  parentTag.append(sectionText)
+
+  const text = document.createElement("span")
+  text.textContent = "A Treasury of Cocktail Recipes and Ingredient Inspiration"
+  sectionText.append(text)
+}
+
+async function getVideo(parentTag) {
+  const section = document.createElement("section")
+  section.className = "padding-main"
+  parentTag.append(section)
+
+  const video = document.createElement("video")
+  video.id = "video-pexel"
+  section.append(video)
+  try {
+    const response = await fetch(pexelsSettings.url, pexelsSettings);
+    const data = await response.json();
+    video.src = data.video_files[0].link
+    video.setAttribute("autoplay","")
+    video.setAttribute("controls","")
+    video.setAttribute("loop","")
+    video.setAttribute("muted","")
+    video.className = "main-video"
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function sectionHomePage(parentTag, query) {
+  const section = document.createElement("section")
+  section.className = "padding-main"
+  parentTag.append(section)
+
+  const h2 = document.createElement("h2")
+  h2.textContent = `${query}`
+  section.append(h2)
+
+  const div = document.createElement("div")
+  div.className = "drink-section"
+  div.id = `${query}-section`
+  section.append(div)
+}
+
+async function getSectionCocktail(query) {
+  const vodkaSection = document.querySelector("#vodka-section")
+  const rumSection = document.querySelector("#rum-section")
+  let parentTag = undefined
+  query === "vodka" ? parentTag = rumSection : parentTag = vodkaSection
+  try {
+    const response = await fetch(`https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`, cocktailSettings);
+    const data = await response.json();
+    for(let i = 0; i < 6; i++){
+      const div = document.createElement("div")
+      div.className = "img-container"
+      parentTag.append(div)
+
+      const img = document.createElement("img")
+      img.src = data.drinks[i].strDrinkThumb
+      img.alt = data.drinks[i].strDrink
+      div.append(img)
+
+      const span = document.createElement("span")
+      span.textContent = data.drinks[i].strDrink
+      div.append(span)
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// FAVORITE PAGE
+async function createFavoritePage() {
+  const app = document.querySelector("#app")
+  const main = document.createElement("main")
+  main.className = "favorite-page"
+  app.append(main)
+}
+
+//CREATE APP
+function createApp() {
+  const body = document.querySelector("body")
+  const app = document.createElement("div")
+  app.id = "app"
+  app.className = "app"
+  body.append(app)
+}
+
+// searchOptions.addEventListener("input", (e) => {
+//   searchInput.value = e.target.value;
+// });
+// form.addEventListener("submit", handleSubmit);
+// searchInput.addEventListener("keyup", handleKeyUp);
 document.addEventListener("click", handleCocktailClick);
 document.addEventListener("click", handleBtnClose);
 document.addEventListener("click",handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
 document.addEventListener("click", handleSingleFavoriteCocktail)
 document.addEventListener("click", handleRemoveFavoriteDrink)
-
+document.addEventListener("click", handleLogoHome)
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
@@ -531,5 +775,3 @@ const toggleDrink = document.querySelector("#toggle-drink")
     },500)
   }
 }
-
-console.log(allStorage());
