@@ -184,26 +184,28 @@ const handleKeyUp = async (e) => {
 };
 
 const handleSubmit = async (e) => {
-  e.preventDefault();
-  const query = searchInput.value;
+  if(e.target.matches("#search-icon-panel")){
+    e.preventDefault();
+    const query = searchInput.value;
 
-  if (!query) {
-    searchOptions.innerHTML = "";
-    return;
-  }
-  if(results){
-    results.remove()
-  }
-  try {
-    const response = await fetch(
-      `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
-      cocktailSettings
-    );
-    const data = await response.json();
-    await resultsFromInput(data);
-    searchInput.value = ""
-  } catch (error) {
-    console.log(error);
+    if (!query) {
+      searchOptions.innerHTML = "";
+      return;
+    }
+    if(results){
+      results.remove()
+    }
+    try {
+      const response = await fetch(
+        `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+        cocktailSettings
+      );
+      const data = await response.json();
+      await resultsFromInput(data);
+      searchInput.value = ""
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
@@ -246,15 +248,6 @@ const createCloseBtn = (parentTag) => {
   }
   parentTag.insertBefore(iconDiv, parentTag.children[0]);
 };
-
-async function doOptionsForInput(data) {
-  searchOptions.textContent = "";
-  await data.drinks.forEach((result) => {
-    const optionElement = document.createElement("option");
-    optionElement.value = result.strDrink;
-    searchOptions.appendChild(optionElement);
-  });
-}
 
 function setCocktailStage(data) {
   data.forEach((item) => {
@@ -415,7 +408,6 @@ async function handleSingleFavoriteCocktail(e) {
   }
 }
 
-
 function handleRemoveFavoriteDrink(e) {
   if(e.target.matches("#heart-remove-container")){
 
@@ -436,26 +428,27 @@ const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
   await createHomePage()
+
   // displayCocktailsName(cocktailsStage, allTitles);
 };
 
 getPageData();
 
 async function resultsFromInput(data) {
-  const topDrinks = document.querySelector("#top-drinks");
-  const favoriteContainer = document.querySelector("#favorite-container")
-  const results = document.createElement("div");
-  if (topDrinks) {
-    topDrinks.remove();
-  }
-  if(favoriteContainer){
-    favoriteContainer.remove()
-    drinkSection.dataset.favorite = true
-  }
+  // const topDrinks = document.querySelector("#top-drinks");
+  // const favoriteContainer = document.querySelector("#favorite-container")
+  // if (topDrinks) {
+  //   topDrinks.remove();
+  // }
+  // if(favoriteContainer){
+  //   favoriteContainer.remove()
+  //   drinkSection.dataset.favorite = true
+  // }
+  const main = document.querySelector("main")
+  const results = document.getElementById("results");
   console.log(data);
-  results.className = "results";
-  results.id = "results"
-  drinkSection.append(results);
+ 
+  main.append(results);
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
@@ -516,11 +509,6 @@ function createHeader() {
   aTopTen.textContent = "top ten"
   navTag.append(aTopTen)
 
-  const aSearchDrink = document.createElement("a")
-  aSearchDrink.id = "search-drink-page"
-  aSearchDrink.textContent = "search"
-  navTag.append(aSearchDrink)
-
   const aAboutPage = document.createElement("a")
   aAboutPage.id = "about-page"
   aAboutPage.textContent = "about"
@@ -534,7 +522,7 @@ function createHeader() {
   divHeart.className = "heart-container blink"
 
   const i = document.createElement("i")
-  i.className = "fa-regular fa-heart fa-2xl"
+  i.className = "fa-regular fa-heart fa-xl"
   i.id = "favorite-heart"
   divHeart.append(i)
 
@@ -548,13 +536,24 @@ function createHeader() {
   span.textContent = "0"
   divHeartCounter.append(span)
   
-
   divRightContainer.append(divHeart)
   navTag.append(divRightContainer)
   // Append all to header
   header.append(navTag)
   // header.append(divRightContainer)
   app.insertBefore(header, app.children[0])
+
+  //Search Input Icon 
+
+  const searchContainer = document.createElement("div")
+  searchContainer.className = "search-container"
+
+  const searchIcon = document.createElement("i")
+  searchIcon.className = "fa-solid fa-magnifying-glass fa-xl"
+  searchIcon.id = "search-icon"
+  searchContainer.append(searchIcon)
+  navTag.append(searchContainer)
+
 }
 
 function createFooter() {
@@ -607,6 +606,71 @@ function createFooter() {
 
   app.insertBefore(footer, app.children[2])
 }
+
+// Search function 
+
+async function handleSearchButton(e) {
+  if(e.target.matches("#search-icon")) { 
+    app.remove()
+    createApp()
+
+    const main = document.createElement("main")
+    app.append(main)
+    
+    createHeader()
+    createSearchPanel(main)
+    await resultsFromInput()
+    createFooter()
+  }
+}
+async function doOptionsForInput(data) {
+  const searchInput =  document.getElementById("search-input")
+  searchInput.textContent = "";
+  await data.drinks.forEach((result) => {
+    const optionElement = document.createElement("option");
+    optionElement.value = result.strDrink;
+    search.appendChild(optionElement);
+  });
+}
+
+function createSearchPanel() {
+  const app = document.querySelector("#app")
+  const main = document.querySelector("main")
+  console.log(main)
+  
+  const shell = document.createElement("section")
+  shell.className = "shell"
+  shell.id = "shell"
+  main.append(shell)
+
+  const panel = document.createElement("panel")
+  panel.className = "search-panel"
+  panel.id = "search-panel"
+  shell.append(panel)
+
+  const searchSection = document.createElement("section")
+  searchSection.className = "search-section-input"
+  panel.append(searchSection)
+
+  const searchInput = document.createElement("input")
+  searchInput.className = "search-input"
+  searchInput.id = "search-input"
+  searchInput.setAttribute("placeholder", "search here...")
+  searchSection.append(searchInput)
+
+  const searchIcon = document.createElement("i")
+  searchIcon.className = "fa-solid fa-magnifying-glass fa-xl"
+  searchIcon.id = "search-icon-panel"
+  searchSection.append(searchIcon)
+
+  const div = document.createElement("div")
+  div.className = "results"
+  div.id = "results"
+  main.append(div)
+
+  app.append(main)
+}
+
 // HOME PAGE
 async function createHomePage() {
   const app = document.querySelector("#app")
@@ -619,6 +683,7 @@ async function createHomePage() {
   heroSectionHomePage(main)
   subTitleHomePage(main)
   await getVideo(main)
+  article(main)
   sectionHomePage(main, "vodka")
   sectionHomePage(main, "rum")
   await getSectionCocktail("vodka")
@@ -676,6 +741,43 @@ async function getVideo(parentTag) {
   }
 }
 
+function article(parentTag) {
+  const sectionArticle = document.createElement("section")
+  sectionArticle.className = "article-content"
+  parentTag.append(sectionArticle)
+
+  const div = document.createElement("div")
+  div.textContent = "You raise a glass at weddings."
+  sectionArticle.append(div)
+
+  const div1 = document.createElement("div")
+  div1.textContent = "You cheers at a football game."
+  sectionArticle.append(div1)
+
+  const div2 = document.createElement("div")
+  div2.textContent = "You Cin Cin if you’re in Italy."
+  sectionArticle.append(div2)
+
+  const div3 = document.createElement("div")
+  div3.textContent = "And say Kanpai if you’re in Japan."
+  sectionArticle.append(div3)
+
+  const div4 = document.createElement("div")
+  div4.className = "article-content-1"
+  div4.textContent = "Around the world human beings celebrate with cocktails – whether it’s a wedding, birthday, happy hour with your co-workers or a simple dinner with family, booze brings us together. A study done by PNAS in 2021 showed that alcohol literally narrows physical distance between strangers meaning cocktails are bringing people together. There are countless articles, season after season, on what the best cocktails for any occasion.  We have songs, food, and locations that we pair with different alcohols. Well, here’s another article to add to the list. "
+  sectionArticle.append(div4)
+
+  const div5 = document.createElement("div")
+  div5.className = "article-content-1"
+  div5.textContent = "This website is a Digital Crafts front-end group project made by John Garcia and Christina Barron. Look around! We are proud of our project and would love if you grabbed a drink and stayed awhile. "
+  sectionArticle.append(div5)
+
+  const div6 = document.createElement("div")
+  div6.className = "article-content-1"
+  div6.textContent = "The question is: Do you have a drink? Or are you looking for a cocktail with a specific spirit? Simply scroll down! Or are you interested our top ten list to start 2023, click the link in the menu. Oh, you’re still reading… that means you’re looking for something specific! Right?! Then click search icon and type in what cocktail you want to drink! Cheers! "
+  sectionArticle.append(div6)
+}
+
 function sectionHomePage(parentTag, query) {
   const section = document.createElement("section")
   section.className = "padding-main"
@@ -695,7 +797,7 @@ async function getSectionCocktail(query) {
   const vodkaSection = document.querySelector("#vodka-section")
   const rumSection = document.querySelector("#rum-section")
   let parentTag = undefined
-  query === "vodka" ? parentTag = rumSection : parentTag = vodkaSection
+  query === "rum" ? parentTag = rumSection : parentTag = vodkaSection
   try {
     const response = await fetch(`https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`, cocktailSettings);
     const data = await response.json();
@@ -726,6 +828,28 @@ async function createFavoritePage() {
   app.append(main)
 }
 
+//CREATE ABOUT 
+function createAboutPage(e) {
+  const app = document.querySelector("#app")
+  if(e.target.matches("#about-page")) {
+    app.remove()
+
+    const main = document.createElement("main")
+    main.id = "about-page"
+    main.className = "about-page"
+    app.append(main)
+    // console.log(app)
+    // console.log(main)
+
+    createApp()
+
+    createHeader()
+    aboutProfile()
+    createFooter()
+  
+  }
+};
+
 //CREATE APP
 function createApp() {
   const body = document.querySelector("body")
@@ -735,18 +859,67 @@ function createApp() {
   body.append(app)
 }
 
+function aboutProfile() {
+  const app = document.querySelector("#app")
+  const main = document.getElementById("about-page")
+  console.log(main)
+
+  const groupMemberOne = document.createElement("section")
+  groupMemberOne.className = "group-member-1"
+  main.append(groupMemberOne)
+
+  const div = document.createElement("div")
+  div.className = "about-picture"
+  groupMemberOne.appendChild(div)
+
+  const profileImg = document.createElement("img")
+  profileImg.src = "/img/Christina_Profile.png"
+  profileImg.alt = "Christina Profile Picture"
+  div.appendChild(profileImg)
+  
+  const div2 = document.createElement("div")
+  div2.className = "about-caption"
+  div2.textContent = "I am a graphic and website designer based out of San Diego, California. After graduating with my Bachelors of Science in Business Marketing specializing in Integrated Marketing Communications, I got a job in the non-profit sector designing and creating content. Since opening my own business, Christina Barron Designs, I have gained more work experience the design field and now have enrolled in Digital Crafts Web Development Program to further my education. My favorite drink is a Gin and Tonic and love Kate Sessions park looking over San Diego."
+  div.appendChild(div2)
+
+  const groupMemberTwo = document.createElement("section")
+  groupMemberTwo.className = "group-member-2"
+  main.appendChild(groupMemberTwo)
+
+  const div3 = document.createElement("div")
+  div3.className = "about-picture"
+  groupMemberTwo.appendChild(div3)
+
+  const profileImg2 = document.createElement("img")
+  profileImg2.src = "/img/Christina_Profile.png"
+  profileImg2.alt = "John Garcia Profile Picture"
+  div3.appendChild(profileImg2)
+
+  const div4 = document.createElement("div")
+  div4.className = "about-caption"
+  div4.textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  div3.appendChild(div4)
+
+  app.appendChild(main)
+}
+
+//CREATE SEARCH
+
 // searchOptions.addEventListener("input", (e) => {
 //   searchInput.value = e.target.value;
 // });
 // form.addEventListener("submit", handleSubmit);
 // searchInput.addEventListener("keyup", handleKeyUp);
+
 document.addEventListener("click", handleCocktailClick);
 document.addEventListener("click", handleBtnClose);
-document.addEventListener("click",handleHeart);
+document.addEventListener("click", handleHeart);
 document.addEventListener("click", handleFavoriteListOutput);
 document.addEventListener("click", handleSingleFavoriteCocktail)
 document.addEventListener("click", handleRemoveFavoriteDrink)
 document.addEventListener("click", handleLogoHome)
+document.addEventListener("click", createAboutPage)
+document.addEventListener("click", handleSearchButton)
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
