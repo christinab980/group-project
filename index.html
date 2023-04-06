@@ -9,65 +9,7 @@
   <title>Cocktails Group Project API </title>
 </head>
 <body>
-  <header> 
-      <nav> 
-        <a href="/index.html">home</a>
-        <a href="/favorites.html">favorites</a>
-        <a href="/about.html">about</a>
-      </nav>
-      <div class="header-right-container">
-        <div class="heart-container blink" >
-          <i class="fa-regular fa-heart fa-2xl" id="favorite-heart"></i>
-          <div class="heart-counter-container">
-            <span class="heart-counter" id="heart-nav-bar">0</span>
-          </div>
-        </div>
-        <img src="/img/Logo.png" alt="Digital-crafts-news">
-      </div>
-  </header>
-  <Main class="container">
-    <div class="wrapper"> 
-      <div class="img-block"> 
-
-        <img id="hero-img" src="/img/letsfrolictogether_20140324_0037-1000x650-3.jpg" alt="">
-        
-        <form class="form" id="form" >
-          <p>Not finding your favority drink? Find it here!</p>
-          <input type="text" id="search-input" list="search-options" placeholder="Type a cocktail name...">
-          <button class="search-btn" id="search-btn" >Search</button>
-          <datalist id="search-options"></datalist>
-        </form>
-      </div>
-      <div class="wrap">
-        <div class="text-scroll">
-          <h2 class="main-by-line">The best 10 cocktails to begin 2023!</h2> 
-          <p class="secondary-by-line"> April 6, 2023 by Christina Barron and John Garcia </p>
-          <p class="article">What is the secret sauce behind creating popular cocktails? Is it a catchy name, a flashy glass, or a long list of hard-to-find ingredients? Or is it something else entirely? Here are the top 10 drinks to start off 2023!</p>
-        </div>
-
-        <div class="drink-wrap" id="drink-wrap"> </div>
-        <div class="drinkIngredient" id="drinkIngredient"> </div>
-      </div>
-
-    </div>
-  </Main>
-  <footer>
-    <div>
-    <img src="/img/Logo.png" alt="Digital-crafts-news">
-    <nav> 
-      <a href="/index.html">home</a>
-      <a href="/favorites.html" target="_blank">favorites</a>
-      <a href="/about.html" target="_blank">about</a>
-    </nav>
-    </div>
-    <div class="footer-inner">
-      <p>Follow us on Socials!</p>
-      <div class="socials"> 
-        <img class="socials" src="/img/social_twitter.png" alt="">
-        <img class="socials" src="/img/socials_Insta.png" alt="">
-      </div>
-    </div>
-  </footer>
+  <div id="app" class="app"></div>
   <script src="main.js"> </script>
 </body>
 </html>
