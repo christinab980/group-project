@@ -233,6 +233,14 @@ form p {
 .img-container img {
   object-fit: cover;
   object-position: center;
+  border-radius: 10px;
+}
+
+.img-container span {
+  text-align: center;
+  margin-top: 5px;
+  font-size: .9rem;
+  color: #323232;
 }
 
 .wrap {
@@ -456,6 +464,23 @@ form p {
   animation: blink 1s infinite;
 }
 
+.article-content {
+  padding: 20px 20%;
+  line-height: 1.4;
+  color: #323232;
+}
+
+.article-content-1 {
+  margin-top: 10px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 15px;
+}
+
 @keyframes blink {
   0%{
     transform: translate(0, 0);
@@ -518,6 +543,10 @@ form p {
 
 }
 
+.fa-heart, .fa-magnifying-glass {
+  color: #ffffff;
+}
+
 /* Remove heart Icon */
 
 .heart-remove-container {
@@ -551,7 +580,6 @@ form p {
   display: flex;
 }
 
-
 .about-picture {
   display: flex;
   justify-content: center;
@@ -569,21 +597,36 @@ form p {
   align-items: center;
 }
 
-.favorite-page-header {
+.shell {
+  min-height: 100vh;
+}
+
+.search-section-input {
+  margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  padding: 16px 12px;
+  justify-content: center;
 }
 
-.favorite-page-header img {
-  margin: 10px;
-  margin-left: auto;
-  margin-right: auto;
+.search-input {
+  display: flex;
+  width: 90%;
+  padding: 5px;
+  padding-bottom: 2px;
+  line-height: 2;
+  border: none;
+  font-size: 1.2rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #323232;
+  border-bottom: 1px solid rgba(0,0,0,0.5);
+  outline: none;
 }
 
-.favorite-page-h2 {
-  margin: 25px;
-  font-size: 1.5rem;
-  text-align: center;
+#search-icon-panel {
+  color: #323232;
+  margin-top: 24px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 @media (max-width: 50em) {
@@ -628,7 +671,7 @@ form p {
   }
 
   footer {
-    margin-top: 30%;
+    margin-top: 10%;
     display: flex;
     flex-wrap: wrap;
   }
