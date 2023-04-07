@@ -314,7 +314,12 @@ function loadFavoriteCounter() {
 }
 
 function handleFavoriteListOutput(e) {
+const app = document.querySelector("#app")
+
   if(e.target.matches("#favorite-heart")){
+    if(app){
+      app.remove()
+    }
     const values = allStorage()
     app.remove()
     const newApp = createApp()
@@ -839,8 +844,11 @@ async function createFavoritePage() {
 
 // TOP TEN PAGE
 function handleTopTenPage(e) {
+const app = document.querySelector("#app")
   if(e.target.matches("#top-ten-page")){
-    app.remove()
+    if(app){
+      app.remove()
+    }
     createTopTenPage(e)
   }
 }
