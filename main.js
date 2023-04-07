@@ -424,6 +424,7 @@ function handleLogoHome(e) {
     }
   }
 }
+
 const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
@@ -684,6 +685,7 @@ async function createHomePage() {
   subTitleHomePage(main)
   await getVideo(main)
   article(main)
+  spiritDrinkHeader(main)
   sectionHomePage(main, "vodka")
   sectionHomePage(main, "rum")
   await getSectionCocktail("vodka")
@@ -746,36 +748,65 @@ function article(parentTag) {
   sectionArticle.className = "article-content"
   parentTag.append(sectionArticle)
 
+  const articleHeader = document.createElement("h2")
+  articleHeader.className = "article-header"
+  articleHeader.textContent = "Cheers to you!"
+  sectionArticle.append(articleHeader)
+
+  const authors = document.createElement("p")
+  authors.className = "authors"
+  authors.textContent = "April 8, 2023 — By John Garcia and Christina Barron"
+  sectionArticle.append(authors)
+
   const div = document.createElement("div")
   div.textContent = "You raise a glass at weddings."
+  div.className = "article-section"
   sectionArticle.append(div)
 
   const div1 = document.createElement("div")
   div1.textContent = "You cheers at a football game."
+  div1.className = "article-section"
   sectionArticle.append(div1)
 
   const div2 = document.createElement("div")
   div2.textContent = "You Cin Cin if you’re in Italy."
+  div2.className = "article-section"
   sectionArticle.append(div2)
 
   const div3 = document.createElement("div")
   div3.textContent = "And say Kanpai if you’re in Japan."
+  div3.className = "article-section"
   sectionArticle.append(div3)
 
   const div4 = document.createElement("div")
-  div4.className = "article-content-1"
+  div4.className = "article-content-1 article-section"
   div4.textContent = "Around the world human beings celebrate with cocktails – whether it’s a wedding, birthday, happy hour with your co-workers or a simple dinner with family, booze brings us together. A study done by PNAS in 2021 showed that alcohol literally narrows physical distance between strangers meaning cocktails are bringing people together. There are countless articles, season after season, on what the best cocktails for any occasion.  We have songs, food, and locations that we pair with different alcohols. Well, here’s another article to add to the list. "
   sectionArticle.append(div4)
 
   const div5 = document.createElement("div")
-  div5.className = "article-content-1"
+  div5.className = "article-content-1 article-section"
   div5.textContent = "This website is a Digital Crafts front-end group project made by John Garcia and Christina Barron. Look around! We are proud of our project and would love if you grabbed a drink and stayed awhile. "
   sectionArticle.append(div5)
 
   const div6 = document.createElement("div")
-  div6.className = "article-content-1"
+  div6.className = "article-content-1 article-section"
   div6.textContent = "The question is: Do you have a drink? Or are you looking for a cocktail with a specific spirit? Simply scroll down! Or are you interested our top ten list to start 2023, click the link in the menu. Oh, you’re still reading… that means you’re looking for something specific! Right?! Then click search icon and type in what cocktail you want to drink! Cheers! "
   sectionArticle.append(div6)
+
+}
+
+function spiritDrinkHeader(parentTag) {
+  const spiritDrinkSection = document.createElement("section")
+  spiritDrinkSection.className = "spirit-drink-header"
+  parentTag.append(spiritDrinkSection)
+
+  const featuredSpiritsHeader = document.createElement("h2")
+  featuredSpiritsHeader.textContent = "Take a look at this months featured spirits"
+  spiritDrinkSection.append(featuredSpiritsHeader)
+
+  const line = document.createElement("div")
+  line.className = "line"
+  spiritDrinkSection.append(line)
 }
 
 function sectionHomePage(parentTag, query) {
@@ -833,15 +864,12 @@ function createAboutPage(e) {
   const app = document.querySelector("#app")
   if(e.target.matches("#about-page")) {
     app.remove()
-
+    const newApp = createApp()
     const main = document.createElement("main")
-    main.id = "about-page"
-    main.className = "about-page"
-    app.append(main)
-    // console.log(app)
-    // console.log(main)
 
-    createApp()
+    main.id = "about-page-main"
+    main.className = "about-page"
+    newApp.append(main)
 
     createHeader()
     aboutProfile()
@@ -857,12 +885,17 @@ function createApp() {
   app.id = "app"
   app.className = "app"
   body.append(app)
+  return app
 }
 
 function aboutProfile() {
   const app = document.querySelector("#app")
-  const main = document.getElementById("about-page")
-  console.log(main)
+  const main = document.querySelector("#about-page-main")
+  
+  const heading = document.createElement("h2")
+  heading.className = "about-heading"
+  heading.textContent = "Meet Our Team"
+  main.append(heading)
 
   const groupMemberOne = document.createElement("section")
   groupMemberOne.className = "group-member-1"
@@ -882,6 +915,11 @@ function aboutProfile() {
   div2.textContent = "I am a graphic and website designer based out of San Diego, California. After graduating with my Bachelors of Science in Business Marketing specializing in Integrated Marketing Communications, I got a job in the non-profit sector designing and creating content. Since opening my own business, Christina Barron Designs, I have gained more work experience the design field and now have enrolled in Digital Crafts Web Development Program to further my education. My favorite drink is a Gin and Tonic and love Kate Sessions park looking over San Diego."
   div.appendChild(div2)
 
+  const linkedinIcon = document.createElement("i")
+  linkedinIcon.className = "fa-brands fa-linkedin-in fa-xl"
+  linkedinIcon.id = "linkedinIcon"
+  div2.append(linkedinIcon) 
+
   const groupMemberTwo = document.createElement("section")
   groupMemberTwo.className = "group-member-2"
   main.appendChild(groupMemberTwo)
@@ -891,7 +929,7 @@ function aboutProfile() {
   groupMemberTwo.appendChild(div3)
 
   const profileImg2 = document.createElement("img")
-  profileImg2.src = "/img/Christina_Profile.png"
+  profileImg2.src = "/img/John.png"
   profileImg2.alt = "John Garcia Profile Picture"
   div3.appendChild(profileImg2)
 
@@ -900,8 +938,21 @@ function aboutProfile() {
   div4.textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
   div3.appendChild(div4)
 
+  const linkedinIcon2 = document.createElement("i")
+  linkedinIcon2.className = "fa-brands fa-linkedin-in fa-xl"
+  linkedinIcon2.id = "linkedinIcon2"
+  div4.append(linkedinIcon2)
+
   app.appendChild(main)
 }
+
+function handleLinkIcon(e) {
+  if(e.target.matches("#linkedinIcon")) {
+      window.open('https://www.linkedin.com/in/christina-barron-9446b2262/', '_blank')
+  }
+}
+
+
 
 //CREATE SEARCH
 
@@ -920,6 +971,7 @@ document.addEventListener("click", handleRemoveFavoriteDrink)
 document.addEventListener("click", handleLogoHome)
 document.addEventListener("click", createAboutPage)
 document.addEventListener("click", handleSearchButton)
+document.addEventListener("click", handleLinkIcon)
 
 function handleBtnClose(e) {
 const icon = document.querySelector("#icon");
