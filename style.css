@@ -551,11 +551,12 @@ form p {
 
 .heart-remove-container {
   /* position: absolute; */
-  margin-top: 14px;
+  margin-left: auto;
+  padding: 4px;
   cursor: pointer;
   top: -40px;
   right: 40px;
-  width: 38px;
+  min-width: 38px;
   overflow: hidden;
   color: #000;
 }
@@ -627,6 +628,49 @@ form p {
   margin-top: 24px;
   cursor: pointer;
   margin-left: 10px;
+}
+
+/* Favorite Drink Cards */
+.favorite-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.favorite-drink-card {
+  display: flex;
+  flex-direction: row;
+  padding: 30px;
+  background: #cccccc2d;
+  border-radius: 10px;
+  gap: 20px;
+}
+
+.favorite-img-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.favorite-img-card img {
+  max-width: 320px;
+  border-radius: 10px;
+}
+
+.drink-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drink-info-card span {
+  font-size: 1.7rem;
+}
+
+.drink-info-card .ingredients {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 @media (max-width: 50em) {

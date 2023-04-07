@@ -11,7 +11,6 @@ const RANDOM_SELECTION_URL =
   "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const form = document.querySelector("#form");
 const app = document.querySelector("#app")
-
 const results = document.querySelector("#results")
 
 
@@ -20,6 +19,7 @@ const cocltailsSourcesStage = [];
 let heroImagePosition = 0;
 let heartStage = 0
 let favoriteHeartStorage = []
+let favoriteHeartStorage_data = []
 
 const cocktailSettings = {
   url: RANDOM_SELECTION_URL,
@@ -48,7 +48,7 @@ const displayCocktailsName = (cocktail, parentTag) => {
   cocktail.forEach((item) => {
     const div = document.createElement("div");
     div.className = "drink";
-    div.setAttribute("drink-id", item.idDrink);
+    div.setAttribute("id", item.idDrink);
     div.dataset.value = item.strDrink 
     section.append(div);
     const value = getClickedCocktaild(item.idDrink)
@@ -59,7 +59,6 @@ const displayCocktailsName = (cocktail, parentTag) => {
 
 function displayCocktails(cocktail, parentTag) {
   const section = parentTag;
-
   
   const div = document.createElement("div");
   div.className = "drink";
@@ -148,7 +147,6 @@ const getCleanDataFromSingleId = (id, stage) => {
       ingredients = [],
       measures = [],
     } = cocktail;
-    console.log(cocktail);
     for (const key in cocktail) {
       if (key.startsWith("strIngredient") && cocktail[key]) {
         ingredients.push(cocktail[key]);
@@ -263,12 +261,6 @@ function setCocktailStage(data) {
   });
 }
 
-function setCocktailStage(data) {
-  data.forEach((item) => {
-    cocktailsStage.push(item);
-  });
-}
-
 function setSourcesStage(data) {
   data.forEach((item) => {
     cocltailsSourcesStage.push(item.src.original);
@@ -290,15 +282,17 @@ function setLocalStorageDrink(attribute) {
 }
 
 function handleHeart(e) {
+const heartNav = document.querySelector("#heart-nav-bar")
+
   // This function is adding but not substracting 
   // We need to create an attribute to avoid adding multimple favorite numbers
   if(e.target.matches("[favoritebtn]")){
-    const attribute = e.target.parentNode.dataset.value
+    const attribute = e.target.parentNode.parentNode.dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
     if(!isDrinkInFavorites){
-      heartStage += 1
-      heartNav.textContent = heartStage + favoriteHeartStorage.length
+      heartNav.textContent = 1 + localStorageDrinks.length
+      fetchDataFromLocalStorage(attribute)
       setLocalStorageDrink(attribute)
     }
   }
@@ -307,30 +301,38 @@ function handleHeart(e) {
 function loadFavoriteCounter() {
   const heartNav = document.querySelector("#heart-nav-bar")
   const storageKeys = allStorage()
-  storageKeys.forEach(item => {
+  storageKeys.forEach((item) => {
     favoriteHeartStorage.push(item)
   })
   heartNav.textContent = storageKeys.length
 }
 
-function handleFavoriteListOutput(e) {
+async function handleFavoriteListOutput(e) {
 const app = document.querySelector("#app")
 
   if(e.target.matches("#favorite-heart")){
     if(app){
       app.remove()
     }
-    const values = allStorage()
     app.remove()
     const newApp = createApp()
     const main = createMainTag(newApp, "top-ten-page padding")
     createHeader()
     loadFavoriteCounter()
     createHeroSection(main)
-    createFavoritesOutputDisplay(values, main)
+    const cleanData = favoriteHeartStorage_data.map(item => {
+      return getCleanDataFromSingleId(item.idDrink, favoriteHeartStorage_data)
+    })
+    createFavoritesOutputDisplay(cleanData, main)
     createFooter()
-    console.log(values)
   }
+}
+
+function getDataFromLocalStorage(){
+  const values = allStorage()
+  values.forEach( item => {
+    fetchDataFromLocalStorage(item)
+  })
 }
 
 function allStorage() {
@@ -369,7 +371,6 @@ function createRemoveFavorite(parentTag) {
 }
 
 function createFavoritesOutputDisplay(cocktailNames, parentTag){
-  console.log(cocktailNames)
   const section = document.createElement("section")
   section.className = "padding-main"
   parentTag.append(section)
@@ -381,22 +382,69 @@ function createFavoritesOutputDisplay(cocktailNames, parentTag){
   parentDiv.className = "favorite-container"
   parentDiv.id = "favorite-container"
   section.append(parentDiv)
-
   cocktailNames.forEach(item => {
     const drink = document.createElement("div")
+    drink.className = "favorite-drink-card"
     parentDiv.append(drink)
 
+    const imgAndNameDiv = document.createElement("div")
+    imgAndNameDiv.className = "favorite-img-card"
+    drink.append(imgAndNameDiv)
     const img = document.createElement("img")
-    img.src = ""
-    drink.append(img)
+    img.src = item.strDrinkThumb
+    imgAndNameDiv.append(img)
+
+    const drinkInfo = document.createElement("div")
+    drinkInfo.className = "drink-info-card"
+    drink.append(drinkInfo)
 
     const span = document.createElement("span")
-    span.className = "favorite-drink"
-    span.id = "favorite-drink"
-    span.textContent = item
-    drink.append(span)
+    span.textContent = item.strDrink
+    drinkInfo.append(span)
+
+    const div2 = document.createElement("div");
+    div2.className = "ingredients";
+    const divIngredients = document.createElement("div");
+    const divMeasure = document.createElement("div");
+    divMeasure.className = "measure-container";
+    divIngredients.className = "ingredients-container";
+
+    item.ingredients.forEach((item) => {
+      const measure = document.createElement("div");
+      measure.textContent = item;
+      divMeasure.append(measure);
+      div2.append(divMeasure);
+    });
+
+    item.measures.forEach((item) => {
+      const ingredient = document.createElement("div");
+      ingredient.textContent = item;
+      divIngredients.append(ingredient);
+      div2.append(divIngredients);
+    });
+
+    drinkInfo.append(div2);
+    const spanInstructions = document.createElement("span");
+    spanInstructions.className = "instructions"
+    spanInstructions.textContent = item.strInstructions;
+    drinkInfo.append(spanInstructions);
+
+    createRemoveFavorite(drink)
 
   })
+}
+
+async function fetchDataFromLocalStorage(query){
+    try {
+      const response = await fetch(
+        `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+        cocktailSettings
+      );
+      const data = await response.json();
+      favoriteHeartStorage_data.push(data.drinks[0])
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 
@@ -697,6 +745,7 @@ async function createHomePage() {
   await getSectionCocktail("rum")
   setIntervalHero()
   loadFavoriteCounter()
+  getDataFromLocalStorage()
 }
 
 function createHeroSection(parentTag) {
