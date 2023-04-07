@@ -385,6 +385,7 @@ function createFavoritesOutputDisplay(cocktailNames, parentTag){
   cocktailNames.forEach(item => {
     const drink = document.createElement("div")
     drink.className = "favorite-drink-card"
+    drink.dataset.name = item.strDrink
     parentDiv.append(drink)
 
     const imgAndNameDiv = document.createElement("div")
@@ -466,8 +467,14 @@ async function handleSingleFavoriteCocktail(e) {
 }
 
 function handleRemoveFavoriteDrink(e) {
-  if(e.target.matches("#heart-remove-container")){
-
+  const heartNav = document.querySelector("#heart-nav-bar")
+  const storageKeys = allStorage()
+  if(e.target.matches(".fa-heart-circle-minus")){
+    const node = e.target.parentNode.parentNode
+    const targetText = e.target.parentNode.parentNode.dataset.name
+    node.remove()
+    localStorage.removeItem(`${targetText}`)
+    heartNav.textContent = storageKeys.length - 1
   }
 }
 

@@ -671,6 +671,7 @@ form p {
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
+  gap: 8px;
 }
 
 @media (max-width: 50em) {
