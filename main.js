@@ -570,7 +570,7 @@ function createHeader() {
 
   const navTag = document.createElement("nav")
   const imgLogo = document.createElement("img")
-  imgLogo.src = "./img/Logo.png"
+  imgLogo.src = "./img/logo.png"
   imgLogo.alt = "Digital-crafts-news"
   imgLogo.id = "logo-home-page"
   header.append(imgLogo)
@@ -1006,7 +1006,7 @@ function aboutProfile() {
   groupMemberOne.appendChild(div)
 
   const profileImg = document.createElement("img")
-  profileImg.src = "./img/Christina_Profile.png"
+  profileImg.src = "./img/christina_Profile.png"
   profileImg.alt = "Christina Profile Picture"
   div.appendChild(profileImg)
   
@@ -1029,7 +1029,7 @@ function aboutProfile() {
   groupMemberTwo.appendChild(div3)
 
   const profileImg2 = document.createElement("img")
-  profileImg2.src = "./img/John.png"
+  profileImg2.src = "./img/john.png"
   profileImg2.alt = "John Garcia Profile Picture"
   div3.appendChild(profileImg2)
 
