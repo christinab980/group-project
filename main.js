@@ -570,7 +570,7 @@ function createHeader() {
 
   const navTag = document.createElement("nav")
   const imgLogo = document.createElement("img")
-  imgLogo.src = "/img/Logo.png"
+  imgLogo.src = "./img/Logo.png"
   imgLogo.alt = "Digital-crafts-news"
   imgLogo.id = "logo-home-page"
   header.append(imgLogo)
@@ -635,7 +635,7 @@ function createFooter() {
   const nav = document.createElement("nav")
 
   const imgLogo = document.createElement("img")
-  imgLogo.src = "/img/Logo.png"
+  imgLogo.src = "./img/Logo.png"
   imgLogo.id = "logo-home-page"
   imgLogo.alt = "Digital-crafts-news"
   firstDiv.append(imgLogo)
@@ -770,7 +770,7 @@ function createHeroSection(parentTag) {
 
   const img = document.createElement("img")
   img.id = "hero-img"
-  img.src = "/img/letsfrolictogether_20140324_0037-1000x650-3.jpg"
+  img.src = "./img/letsfrolictogether_20140324_0037-1000x650-3.jpg"
   img.alt = "Set of cocktail images"
   sectionHeroImg.append(img)
 
@@ -1006,7 +1006,7 @@ function aboutProfile() {
   groupMemberOne.appendChild(div)
 
   const profileImg = document.createElement("img")
-  profileImg.src = "/img/Christina_Profile.png"
+  profileImg.src = "./img/Christina_Profile.png"
   profileImg.alt = "Christina Profile Picture"
   div.appendChild(profileImg)
   
@@ -1029,7 +1029,7 @@ function aboutProfile() {
   groupMemberTwo.appendChild(div3)
 
   const profileImg2 = document.createElement("img")
-  profileImg2.src = "/img/John.png"
+  profileImg2.src = "./img/John.png"
   profileImg2.alt = "John Garcia Profile Picture"
   div3.appendChild(profileImg2)
 
