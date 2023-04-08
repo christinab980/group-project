@@ -1,7 +1,6 @@
 const allTitles = document.querySelectorAll("[drink-id]");
 const drinkSection = document.getElementById("drink-wrap");
 const drinkIngredient = document.getElementsByClassName("drinkIngredient");
-const fetchUrl = "https://the-cocktail-db.p.rapidapi.com/randomselection.php";
 const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
 const searchButton = document.getElementById("search-btn");
@@ -33,6 +32,7 @@ const cocktailSettings = {
 const fetchData = async () => {
   try {
     const response = await fetch(cocktailSettings.url, cocktailSettings);
+    console.log(response)
     const data = await response.json();
     console.log(data)
     setCocktailStage(data.drinks);
