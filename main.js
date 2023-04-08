@@ -570,7 +570,7 @@ function createHeader() {
 
   const navTag = document.createElement("nav")
   const imgLogo = document.createElement("img")
-  imgLogo.src = "/img/Logo.png"
+  imgLogo.src = "./img/Logo.png"
   imgLogo.alt = "Digital-crafts-news"
   imgLogo.id = "logo-home-page"
   header.append(imgLogo)
