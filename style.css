@@ -213,6 +213,7 @@ body{
   background-color: #323232;
   left: 900px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .favoriteBtn:hover {
@@ -347,6 +348,7 @@ form input {
 h2 {
   color: #323232;
   font-size: 1.6rem;
+  text-transform: uppercase;
 }
 
 h3, h4 {
@@ -570,6 +572,10 @@ header a:hover, footer a:hover {
   width: 57%;
 }
 
+main {
+  min-height: calc(90vh - 70px);
+}
+
 .main-by-line {
   display: flex;
   margin: 20px;
@@ -670,9 +676,6 @@ nav {
   margin: 0 15px;
 }
 
-.shell {
-  min-height: 30vh;
-}
 
 .search-section-input {
   margin: 0 auto;
@@ -853,7 +856,7 @@ nav {
 
   .icon {
     top: -70px;
-    left: 0;   
+    left: 20%;   
   }
 
   .img-block img {

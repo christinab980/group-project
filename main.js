@@ -6,6 +6,7 @@ const RANDOM_SELECTION_URL =
 const form = document.querySelector("#form");
 const app = document.querySelector("#app")
 const results = document.querySelector("#results")
+const inputSearch = document.querySelector("#search-input")
 
 
 const cocktailsStage = [];
@@ -191,37 +192,43 @@ const getCleanDataFromSingleId = (id, stage) => {
 
 const handleKeyUp = async (e) => {
   const searchOptions = document.querySelector("search-input")
-  const query = e.target.value.trim();
-
-  if (!query) {
-    console.log(query)
-    searchOptions.innerHTML = "";
-    return;
-  }
-  try {
-    const response = await fetch(
-      `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
-      cocktailSettings
-    );
-    const data = await response.json();
-    await doOptionsForInput(data);
-  } catch (error) {
-    console.log(error);
+  if(e.target.matches("#search-input")){
+    const query = e.target.value.trim();
+    if (!query && query === "") {
+      searchOptions.innerHTML = "";
+      return;
+    }
+    try {
+      const response = await fetch(
+        `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+        cocktailSettings
+      );
+      const data = await response.json();
+      await doOptionsForInput(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
 const handleSubmit = async (e) => {
 const searchInput= document.querySelector("#search-input")
+const searchOptions = document.querySelector("search-options")
+const results = document.querySelector("#results")
+const shell = document.querySelector("#shell")
+
   if(e.target.matches("#search-icon-panel")){
     e.preventDefault();
     const query = searchInput.value;
 
-    if (!query) {
-      searchOptions.innerHTML = "";
-      return;
-    }
+    if (!query)return
     if(results){
       results.remove()
+
+      const div = document.createElement("div")
+      div.className = "results"
+      div.id = "results"
+      shell.append(div)
     }
     try {
       const response = await fetch(
@@ -315,6 +322,7 @@ const heartNav = document.querySelector("#heart-nav-bar")
 const heartIcon = document.querySelectorAll("[favoritebtn]")
   // Pseudo element can not be targeted
   if(e.target.matches("[favoritebtn]")){
+    console.log(e.target.closest("[data-value]"))
     const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
@@ -533,13 +541,13 @@ getPageData();
 async function resultsFromInput(data) {
   const main = document.querySelector("main")
   const results = document.getElementById("results");
-  console.log(data);
-
+  const localStorageValues = allStorage()
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
     let count = 1;
-
+    results.dataset.value = myDrink.strDrink
+    
     for (let i in myDrink) {
       let ingredient = " ";
       let measure = " ";
@@ -556,14 +564,32 @@ async function resultsFromInput(data) {
         ingredients.push(`${measure} ${ingredient}`);
       }
     }
-    results.innerHTML = `
-    <img src =${myDrink.strDrinkThumb}>
-    <h3> ${myDrink.strDrink} </h2>
-    <h4> Ingredients: </h4>
-    <ul class = "myDrinkIngredients"> </ul>
-    <h4> Instructions: </h4>
-    <p>${myDrink.strInstructions}</p>
-  `;
+
+    const img = document.createElement("img")
+    img.src = myDrink.strDrinkThumb
+    results.append(img)
+
+    const h3 = document.createElement("h3")
+    h3.textContent = myDrink.strDrink
+    h3.dataset.value = myDrink.strDrink
+    results.append(h3)
+    
+    const h4 = document.createElement("h4")
+    h4.textContent = "Ingredients:"
+    results.append(h4)
+
+    const ul = document.createElement("ul")
+    ul.className = "myDrinkIngredients"
+    results.append(ul)
+
+    const h4Instructions = document.createElement("h4")
+    h4Instructions.textContent = "Instructions:"
+    results.append(h4Instructions)
+
+    const p = document.createElement("p")
+    p.textContent = myDrink.strInstructions
+    results.append(p)
+
     let ingredientsCon = document.querySelector(".myDrinkIngredients");
     ingredients.forEach((item) => {
       let listItem = document.createElement("li");
@@ -571,11 +597,14 @@ async function resultsFromInput(data) {
       ingredientsCon.append(listItem);
     })
     main.append(results);
+    createCloseBtn(results)
+    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
+   
   });
   // Fix Close btn
-  createCloseBtn(results)
+  
   // if the searched drink matches with any of the local S drinks then print remove favorite otherwise print add btn to favorite 
-  createRemoveFavorite(results)
+  
 }
 
 // HEADER AND FOOTER 
@@ -694,6 +723,7 @@ async function handleSearchButton(e) {
     newApp.append(main)
     
     createHeader()
+    loadFavoriteCounter()
     createHeroSection(main)
     setIntervalHero()
     subTitleHomePage(main)
@@ -707,9 +737,7 @@ async function doOptionsForInput(data) {
   const optionsForInput = document.querySelector("#search-options")
   const optionsForInputAll = document.querySelectorAll("#search-options")
   searchInput.textContent = "";
-  if(optionsForInput){
-    optionsForInputAll.forEach(item => item.remove())
-  }
+
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
@@ -992,6 +1020,7 @@ function createAboutPage(e) {
     newApp.append(main)
 
     createHeader()
+    loadFavoriteCounter()
     aboutProfile()
     createFooter()
   
@@ -1084,20 +1113,16 @@ function handleGitHub(e) {
 
 function handleBtnClose(e) {
   const icon = document.querySelector("#icon");
-  const results = document.getElementById("#results")
+  const results = document.querySelector("#results")
   const toggleDrink = document.querySelector("#toggle-drink")
     if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
       icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
       setTimeout(()=> {
         if(results){
-          results.remove()
-      displayCocktailsName(cocktailsStage);
-      return
+          results.childNodes.forEach(item => item.remove())
         }
-        if(toggleDrink){
-          toggleDrink.remove()
-  
-          return
+        if(icon){
+          icon.remove()
         }
   
       },500)
