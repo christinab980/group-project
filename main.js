@@ -1,4 +1,4 @@
-const searchOptions = document.getElementById("search-options");
+// const searchOptions = document.getElementById("search-options");
 const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
@@ -190,7 +190,7 @@ const getCleanDataFromSingleId = (id, stage) => {
 // INPUT SECTION
 
 const handleKeyUp = async (e) => {
-  const searchOptions = document.querySelector("")
+  const searchOptions = document.querySelector("search-input")
   const query = e.target.value.trim();
 
   if (!query) {
@@ -228,6 +228,7 @@ const searchInput= document.querySelector("#search-input")
         cocktailSettings
       );
       const data = await response.json();
+      console.log(data)
       await resultsFromInput(data);
       searchInput.value = ""
     } catch (error) {
@@ -310,10 +311,9 @@ function setLocalStorageDrink(attribute) {
 
 function handleHeart(e) {
 const heartNav = document.querySelector("#heart-nav-bar")
-
-  // This function is adding but not substracting 
-  // We need to create an attribute to avoid adding multimple favorite numbers
-  if(e.target.matches("[favoritebtn]")){
+  // Pseudo element can not be targeted
+  if(e.target.matches("[favoritebtn]" || e.target.matches("#favoriteHeartBtn")) ){
+    console.log("Clicked")
     const attribute = e.target.parentNode.parentNode.dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
@@ -341,7 +341,7 @@ const app = document.querySelector("#app")
     if(app){
       app.remove()
     }
-    app.remove()
+    // app.remove()
     const newApp = createApp()
     const main = createMainTag(newApp, "top-ten-page padding")
     createHeader()
@@ -383,6 +383,7 @@ function createHeartBtn(parentTag) {
 
   const heartIcon = document.createElement("i")
   heartIcon.className = "fa-regular fa-heart fa-lg"
+  heartIcon.id = "favoriteHeartBtn"
   heartDiv.append(heartIcon)
 }
 
@@ -568,7 +569,9 @@ async function resultsFromInput(data) {
     })
     main.append(results);
   });
-  createCloseBtn(results);
+  // Fix Close btn
+  createCloseBtn(results)
+  // if the searched drink matches with any of the local S drinks then print remove favorite otherwise print add btn to favorite 
   createRemoveFavorite(results)
 }
 
@@ -678,6 +681,7 @@ function createFooter() {
 // Search function 
 
 async function handleSearchButton(e) {
+  const app = document.querySelector("#app")
   if(e.target.matches("#search-icon")) { 
     app.remove()
 
@@ -690,26 +694,28 @@ async function handleSearchButton(e) {
     createHeroSection(main)
     subTitleHomePage(main)
     createSearchPanel(main)
-    await handleSubmit(main)
     createFooter()
   }
 }
 
 async function doOptionsForInput(data) {
   const searchInput =  document.getElementById("search-input")
+  const optionsForInput = document.querySelector("#search-options")
+  const optionsForInputAll = document.querySelectorAll("#search-options")
   searchInput.textContent = "";
-  console.log(data)
+  if(optionsForInput){
+    optionsForInputAll.forEach(item => item.remove())
+  }
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
-    search.appendChild(optionElement);
+    optionsForInput.appendChild(optionElement);
   });
 }
 
 function createSearchPanel() {
   const app = document.querySelector("#app")
   const main = document.querySelector("main")
-  console.log(main)
   
   const shell = document.createElement("section")
   shell.className = "shell"
@@ -1103,3 +1109,4 @@ document.addEventListener("click", handleLinkIcon)
 document.addEventListener("click", handleTopTenPage)
 document.addEventListener("click", handleGitHub)
 document.addEventListener("click", handleSubmit)
+document.addEventListener("keyup", handleKeyUp)
