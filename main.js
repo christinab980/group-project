@@ -312,10 +312,10 @@ function setLocalStorageDrink(attribute) {
 
 function handleHeart(e) {
 const heartNav = document.querySelector("#heart-nav-bar")
+const heartIcon = document.querySelectorAll("[favoritebtn]")
   // Pseudo element can not be targeted
-  if(e.target.matches("[favoritebtn]" || e.target.matches("#favoriteHeartBtn")) ){
-    console.log("Clicked")
-    const attribute = e.target.parentNode.parentNode.dataset.value
+  if(e.target.matches("[favoritebtn]")){
+    const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
     if(!isDrinkInFavorites){
@@ -385,6 +385,7 @@ function createHeartBtn(parentTag) {
   const heartIcon = document.createElement("i")
   heartIcon.className = "fa-regular fa-heart fa-lg"
   heartIcon.id = "favoriteHeartBtn"
+  heartIcon.setAttribute("favoriteBtn","")
   heartDiv.append(heartIcon)
 }
 
