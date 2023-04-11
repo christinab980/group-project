@@ -1,9 +1,4 @@
-const allTitles = document.querySelectorAll("[drink-id]");
-const drinkSection = document.getElementById("drink-wrap");
-const drinkIngredient = document.getElementsByClassName("drinkIngredient");
-const searchInput = document.getElementById("search-input");
 const searchOptions = document.getElementById("search-options");
-const searchButton = document.getElementById("search-btn");
 const COCKTAIL_KEY = "da12acd15cmsh2552fb046e26223p151904jsnef737cab5849";
 const COCKTAIL_URL = "the-cocktail-db.p.rapidapi.com";
 const RANDOM_SELECTION_URL =
@@ -32,9 +27,7 @@ const cocktailSettings = {
 const fetchData = async () => {
   try {
     const response = await fetch(cocktailSettings.url, cocktailSettings);
-    console.log(response)
     const data = await response.json();
-    console.log(data)
     setCocktailStage(data.drinks);
   } catch (error) {
     console.log(error);
@@ -57,22 +50,39 @@ const displayCocktailsName = (cocktail, parentTag) => {
   parentTag.append(section);
 };
 
+function topTenCocktailsHeading(parentTag) {
+  const section = parentTag;
+
+  const divTitle = document.createElement("div")
+  divTitle.className = "topTenCaption"
+  section.append(divTitle)
+
+  const TopTenHeading = document.createElement("h2")
+  TopTenHeading.className = "topTenHeading"
+  TopTenHeading.innerText = "The best 10 cocktails to begin 2023!"
+  divTitle.append(TopTenHeading)
+
+  const TopTenArticle = document.createElement("p")
+  TopTenArticle.innerText = "If you've so much as glanced at a cocktail menu in 2023, you likely encountered miniature cocktails, low-ABV spirits hitting center stage, and Martini madness. But when we weren't heading out to restaurants and bars to have someone make us a perfectly crafted drink, we were whipping up drinks inspired by those trends at home, to a party-ready menu. And then, of course, there were the drinks made viral by the Internet, like the Negroni Sbagliato and the Dirty Shirley. Whether you're feeling a little nostalgic for the year past, or want to give something new a try, take a look at the 10 cocktails to the start of 2023."
+  divTitle.append(TopTenArticle)
+}
+
 function displayCocktails(cocktail, parentTag) {
   const section = parentTag;
-  
+
   const div = document.createElement("div");
   div.className = "drink";
   
   const imgAndNameDiv = document.createElement("div")
   section.append(imgAndNameDiv)
 
-  const img = document.createElement("img");
-  img.src = cocktail.strDrinkThumb;
-  imgAndNameDiv.append(img);
-
   const span = document.createElement("span")
   span.textContent = cocktail.strDrink
   imgAndNameDiv.append(span)
+
+  const img = document.createElement("img");
+  img.src = cocktail.strDrinkThumb;
+  imgAndNameDiv.append(img);
 
   const div2 = document.createElement("div");
   div2.className = "drinkIngredient";
@@ -80,6 +90,10 @@ function displayCocktails(cocktail, parentTag) {
   const divMeasure = document.createElement("div");
   divMeasure.className = "measure-container";
   divIngridient.className = "ingridients-container";
+  const ingredientHeading = document.createElement("h3");
+  ingredientHeading.className = "drinkIngredientHeading";
+  ingredientHeading.innerText = "Ingredients"
+  div.append(ingredientHeading)
 
   cocktail.ingredients.forEach((item) => {
     const measure = document.createElement("div");
@@ -96,9 +110,14 @@ function displayCocktails(cocktail, parentTag) {
   });
 
   div.append(div2);
+
   const div3 = document.createElement("div");
+  const heading =document.createElement("h3");
+  heading.innerText = "Direction";
+  heading.className = "drinkInstructionsHeading"
   div3.className = "drinkInstructions";
   const instructions = cocktail.strInstructions;
+  div3.append(heading)
   div3.append(instructions);
   div.append(div3);
   section.append(div);
@@ -171,6 +190,7 @@ const getCleanDataFromSingleId = (id, stage) => {
 // INPUT SECTION
 
 const handleKeyUp = async (e) => {
+  const searchOptions = document.querySelector("")
   const query = e.target.value.trim();
 
   if (!query) {
@@ -190,6 +210,7 @@ const handleKeyUp = async (e) => {
 };
 
 const handleSubmit = async (e) => {
+const searchInput= document.querySelector("#search-input")
   if(e.target.matches("#search-icon-panel")){
     e.preventDefault();
     const query = searchInput.value;
@@ -329,6 +350,7 @@ const app = document.querySelector("#app")
     const cleanData = favoriteHeartStorage_data.map(item => {
       return getCleanDataFromSingleId(item.idDrink, favoriteHeartStorage_data)
     })
+    subTitleHomePage(main)
     createFavoritesOutputDisplay(cleanData, main)
     createFooter()
   }
@@ -381,6 +403,7 @@ function createFavoritesOutputDisplay(cocktailNames, parentTag){
   section.className = "padding-main"
   parentTag.append(section)
   const h3 = document.querySelector("h2")
+  h3.className = "favoriteHeading"
   h3.textContent = "Your favorite drinks"
   section.append(h3)
 
@@ -406,6 +429,7 @@ function createFavoritesOutputDisplay(cocktailNames, parentTag){
     drink.append(drinkInfo)
 
     const span = document.createElement("span")
+    span.className = "favoriteName"
     span.textContent = item.strDrink
     drinkInfo.append(span)
 
@@ -431,8 +455,8 @@ function createFavoritesOutputDisplay(cocktailNames, parentTag){
     });
 
     drinkInfo.append(div2);
-    const spanInstructions = document.createElement("span");
-    spanInstructions.className = "instructions"
+    const spanInstructions = document.createElement("p");
+    spanInstructions.className = "favoriteInstructions"
     spanInstructions.textContent = item.strInstructions;
     drinkInfo.append(spanInstructions);
 
@@ -453,7 +477,6 @@ async function fetchDataFromLocalStorage(query){
       console.log(error);
     }
 }
-
 
 async function handleSingleFavoriteCocktail(e) {
   if(e.target.matches("#favorite-drink")){
@@ -499,27 +522,15 @@ const getPageData = async () => {
   await fetchData();
   await fetchDataPexels();
   await createHomePage()
-
-  // displayCocktailsName(cocktailsStage, allTitles);
 };
 
 getPageData();
 
 async function resultsFromInput(data) {
-  // const topDrinks = document.querySelector("#top-drinks");
-  // const favoriteContainer = document.querySelector("#favorite-container")
-  // if (topDrinks) {
-  //   topDrinks.remove();
-  // }
-  // if(favoriteContainer){
-  //   favoriteContainer.remove()
-  //   drinkSection.dataset.favorite = true
-  // }
   const main = document.querySelector("main")
   const results = document.getElementById("results");
   console.log(data);
- 
-  main.append(results);
+
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
@@ -554,7 +565,8 @@ async function resultsFromInput(data) {
       let listItem = document.createElement("li");
       listItem.innerText = item;
       ingredientsCon.append(listItem);
-    });
+    })
+    main.append(results);
   });
   createCloseBtn(results);
   createRemoveFavorite(results)
@@ -640,23 +652,6 @@ function createFooter() {
   imgLogo.alt = "Digital-crafts-news"
   firstDiv.append(imgLogo)
 
-  const aTopTen = document.createElement("a")
-  aTopTen.id = "top-ten-page"
-  aTopTen.textContent = "top ten"
-  nav.append(aTopTen)
-
-  const aSearchDrink = document.createElement("a")
-  aSearchDrink.id = "search-drink-page"
-  aSearchDrink.textContent = "search"
-  nav.append(aSearchDrink)
-
-  const aAboutPage = document.createElement("a")
-  aAboutPage.id = "about-page"
-  aAboutPage.textContent = "about"
-  nav.append(aAboutPage)
-
-  firstDiv.append(nav)
-
   const socialDiv = document.createElement("div")
   socialDiv.className = "footer-inner"
 
@@ -669,8 +664,10 @@ function createFooter() {
   socialDiv.append(divSocialsChild)
 
   const imgGitHub = document.createElement("img")
+  imgGitHub.id = "gitHubIcon"
   imgGitHub.src = "./img/github_icon.png"
   imgGitHub.alt = "git hub icon"
+  imgGitHub.className = "gitHubIcon"
   divSocialsChild.append(imgGitHub)
   footer.append(firstDiv)
   footer.append(socialDiv)
@@ -683,20 +680,25 @@ function createFooter() {
 async function handleSearchButton(e) {
   if(e.target.matches("#search-icon")) { 
     app.remove()
-    createApp()
+
+    const newApp = createApp()
 
     const main = document.createElement("main")
-    app.append(main)
+    newApp.append(main)
     
     createHeader()
+    createHeroSection(main)
+    subTitleHomePage(main)
     createSearchPanel(main)
-    await resultsFromInput()
+    await handleSubmit(main)
     createFooter()
   }
 }
+
 async function doOptionsForInput(data) {
   const searchInput =  document.getElementById("search-input")
   searchInput.textContent = "";
+  console.log(data)
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
@@ -727,7 +729,12 @@ function createSearchPanel() {
   searchInput.className = "search-input"
   searchInput.id = "search-input"
   searchInput.setAttribute("placeholder", "search here...")
+  searchInput.setAttribute("list", "search-options")
   searchSection.append(searchInput)
+
+  const options = document.createElement("datalist")
+  options.id = "search-options"
+  searchSection.append(options)
 
   const searchIcon = document.createElement("i")
   searchIcon.className = "fa-solid fa-magnifying-glass fa-xl"
@@ -737,7 +744,7 @@ function createSearchPanel() {
   const div = document.createElement("div")
   div.className = "results"
   div.id = "results"
-  main.append(div)
+  shell.append(div)
 
   app.append(main)
 }
@@ -748,7 +755,6 @@ async function createHomePage() {
   const main = createMainTag(app, "home-page")
   
   createHeader()
-  createFooter()
   createHeroSection(main)
   subTitleHomePage(main)
   await getVideo(main)
@@ -761,6 +767,7 @@ async function createHomePage() {
   setIntervalHero()
   loadFavoriteCounter()
   getDataFromLocalStorage()
+  createFooter()
 }
 
 function createHeroSection(parentTag) {
@@ -953,6 +960,8 @@ function createTopTenPage(e){
   createHeader()
   loadFavoriteCounter()
   createHeroSection(main)
+  subTitleHomePage(main)
+  topTenCocktailsHeading(main)
   displayCocktailsName(cocktailsStage, main)
   createFooter()
 
@@ -1052,15 +1061,34 @@ function handleLinkIcon(e) {
   }
 }
 
+function handleGitHub(e) {
+  if(e.target.matches("#gitHubIcon")) {
+    window.open('https://github.com/christinab980/group-project', '_blank')
+  }
+}
 
 
-//CREATE SEARCH
-
-// searchOptions.addEventListener("input", (e) => {
-//   searchInput.value = e.target.value;
-// });
-// form.addEventListener("submit", handleSubmit);
-// searchInput.addEventListener("keyup", handleKeyUp);
+function handleBtnClose(e) {
+  const icon = document.querySelector("#icon");
+  const results = document.getElementById("#results")
+  const toggleDrink = document.querySelector("#toggle-drink")
+    if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
+      icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
+      setTimeout(()=> {
+        if(results){
+          results.remove()
+      displayCocktailsName(cocktailsStage);
+      return
+        }
+        if(toggleDrink){
+          toggleDrink.remove()
+  
+          return
+        }
+  
+      },500)
+    }
+  }
 
 document.addEventListener("click", handleCocktailClick);
 document.addEventListener("click", handleBtnClose);
@@ -1073,31 +1101,5 @@ document.addEventListener("click", createAboutPage)
 document.addEventListener("click", handleSearchButton)
 document.addEventListener("click", handleLinkIcon)
 document.addEventListener("click", handleTopTenPage)
-
-function handleBtnClose(e) {
-const icon = document.querySelector("#icon");
-const results = document.querySelector("#results")
-const toggleDrink = document.querySelector("#toggle-drink")
-  if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
-    icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
-    setTimeout(()=> {
-      if(drinkSection.dataset.favorite == "true"){
-        results.remove()
-        createFavoritesOutputDisplay(favoriteHeartStorage)
-        drinkSection.dataset.favorite = false
-        return
-      }
-      if(results){
-        results.remove()
-    displayCocktailsName(cocktailsStage, allTitles);
-    return
-      }
-      if(toggleDrink){
-        toggleDrink.remove()
-
-        return
-      }
-
-    },500)
-  }
-}
+document.addEventListener("click", handleGitHub)
+document.addEventListener("click", handleSubmit)
