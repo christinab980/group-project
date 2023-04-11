@@ -194,6 +194,7 @@ const handleKeyUp = async (e) => {
   const query = e.target.value.trim();
 
   if (!query) {
+    console.log(query)
     searchOptions.innerHTML = "";
     return;
   }
