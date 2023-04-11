@@ -213,6 +213,7 @@ body{
   background-color: #323232;
   left: 900px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .favoriteBtn:hover {
@@ -244,6 +245,7 @@ body{
 
 .fa-heart, .fa-magnifying-glass {
   color: #ffffff;
+  cursor: pointer;
 }
 
 .fa-heart:hover {
@@ -346,6 +348,7 @@ form input {
 h2 {
   color: #323232;
   font-size: 1.6rem;
+  text-transform: uppercase;
 }
 
 h3, h4 {
@@ -569,6 +572,10 @@ header a:hover, footer a:hover {
   width: 57%;
 }
 
+main {
+  min-height: calc(90vh - 70px);
+}
+
 .main-by-line {
   display: flex;
   margin: 20px;
@@ -667,10 +674,6 @@ nav {
   justify-content: center;
   align-items: center;
   margin: 0 15px;
-}
-
-.shell {
-  min-height: 30vh;
 }
 
 .search-section-input {
@@ -802,6 +805,7 @@ nav {
 
   .favoriteBtn {
     left: 380px;
+    cursor: pointer;
   }
 
   .favorite-drink-card {
@@ -816,6 +820,7 @@ nav {
   .fa-linkedin-in {
     margin-left: auto;
     margin-right: auto;
+    cursor: pointer;
   }
 
   footer {
@@ -850,7 +855,7 @@ nav {
 
   .icon {
     top: -70px;
-    left: 0;   
+    left: 20%;   
   }
 
   .img-block img {

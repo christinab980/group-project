@@ -6,6 +6,7 @@ const RANDOM_SELECTION_URL =
 const form = document.querySelector("#form");
 const app = document.querySelector("#app")
 const results = document.querySelector("#results")
+const inputSearch = document.querySelector("#search-input")
 
 
 const cocktailsStage = [];
@@ -191,36 +192,43 @@ const getCleanDataFromSingleId = (id, stage) => {
 
 const handleKeyUp = async (e) => {
   const searchOptions = document.querySelector("search-input")
-  const query = e.target.value.trim();
-
-  if (!query) {
-    searchOptions.innerHTML = "";
-    return;
-  }
-  try {
-    const response = await fetch(
-      `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
-      cocktailSettings
-    );
-    const data = await response.json();
-    await doOptionsForInput(data);
-  } catch (error) {
-    console.log(error);
+  if(e.target.matches("#search-input")){
+    const query = e.target.value.trim();
+    if (!query && query === "") {
+      searchOptions.innerHTML = "";
+      return;
+    }
+    try {
+      const response = await fetch(
+        `https://the-cocktail-db.p.rapidapi.com/search.php?s=${query}`,
+        cocktailSettings
+      );
+      const data = await response.json();
+      await doOptionsForInput(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
 const handleSubmit = async (e) => {
 const searchInput= document.querySelector("#search-input")
+const searchOptions = document.querySelector("search-options")
+const results = document.querySelector("#results")
+const shell = document.querySelector("#shell")
+
   if(e.target.matches("#search-icon-panel")){
     e.preventDefault();
     const query = searchInput.value;
 
-    if (!query) {
-      searchOptions.innerHTML = "";
-      return;
-    }
+    if (!query)return
     if(results){
       results.remove()
+
+      const div = document.createElement("div")
+      div.className = "results"
+      div.id = "results"
+      shell.append(div)
     }
     try {
       const response = await fetch(
@@ -311,10 +319,11 @@ function setLocalStorageDrink(attribute) {
 
 function handleHeart(e) {
 const heartNav = document.querySelector("#heart-nav-bar")
+const heartIcon = document.querySelectorAll("[favoritebtn]")
   // Pseudo element can not be targeted
-  if(e.target.matches("[favoritebtn]" || e.target.matches("#favoriteHeartBtn")) ){
-    console.log("Clicked")
-    const attribute = e.target.parentNode.parentNode.dataset.value
+  if(e.target.matches("[favoritebtn]")){
+    console.log(e.target.closest("[data-value]"))
+    const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
     if(!isDrinkInFavorites){
@@ -347,6 +356,7 @@ const app = document.querySelector("#app")
     createHeader()
     loadFavoriteCounter()
     createHeroSection(main)
+    setIntervalHero()
     const cleanData = favoriteHeartStorage_data.map(item => {
       return getCleanDataFromSingleId(item.idDrink, favoriteHeartStorage_data)
     })
@@ -384,6 +394,7 @@ function createHeartBtn(parentTag) {
   const heartIcon = document.createElement("i")
   heartIcon.className = "fa-regular fa-heart fa-lg"
   heartIcon.id = "favoriteHeartBtn"
+  heartIcon.setAttribute("favoriteBtn","")
   heartDiv.append(heartIcon)
 }
 
@@ -530,13 +541,13 @@ getPageData();
 async function resultsFromInput(data) {
   const main = document.querySelector("main")
   const results = document.getElementById("results");
-  console.log(data);
-
+  const localStorageValues = allStorage()
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
     let count = 1;
-
+    results.dataset.value = myDrink.strDrink
+    
     for (let i in myDrink) {
       let ingredient = " ";
       let measure = " ";
@@ -553,14 +564,32 @@ async function resultsFromInput(data) {
         ingredients.push(`${measure} ${ingredient}`);
       }
     }
-    results.innerHTML = `
-    <img src =${myDrink.strDrinkThumb}>
-    <h3> ${myDrink.strDrink} </h2>
-    <h4> Ingredients: </h4>
-    <ul class = "myDrinkIngredients"> </ul>
-    <h4> Instructions: </h4>
-    <p>${myDrink.strInstructions}</p>
-  `;
+
+    const img = document.createElement("img")
+    img.src = myDrink.strDrinkThumb
+    results.append(img)
+
+    const h3 = document.createElement("h3")
+    h3.textContent = myDrink.strDrink
+    h3.dataset.value = myDrink.strDrink
+    results.append(h3)
+    
+    const h4 = document.createElement("h4")
+    h4.textContent = "Ingredients:"
+    results.append(h4)
+
+    const ul = document.createElement("ul")
+    ul.className = "myDrinkIngredients"
+    results.append(ul)
+
+    const h4Instructions = document.createElement("h4")
+    h4Instructions.textContent = "Instructions:"
+    results.append(h4Instructions)
+
+    const p = document.createElement("p")
+    p.textContent = myDrink.strInstructions
+    results.append(p)
+
     let ingredientsCon = document.querySelector(".myDrinkIngredients");
     ingredients.forEach((item) => {
       let listItem = document.createElement("li");
@@ -568,11 +597,10 @@ async function resultsFromInput(data) {
       ingredientsCon.append(listItem);
     })
     main.append(results);
+    createCloseBtn(results)
+    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
+   
   });
-  // Fix Close btn
-  createCloseBtn(results)
-  // if the searched drink matches with any of the local S drinks then print remove favorite otherwise print add btn to favorite 
-  createRemoveFavorite(results)
 }
 
 // HEADER AND FOOTER 
@@ -691,7 +719,9 @@ async function handleSearchButton(e) {
     newApp.append(main)
     
     createHeader()
+    loadFavoriteCounter()
     createHeroSection(main)
+    setIntervalHero()
     subTitleHomePage(main)
     createSearchPanel(main)
     createFooter()
@@ -703,9 +733,6 @@ async function doOptionsForInput(data) {
   const optionsForInput = document.querySelector("#search-options")
   const optionsForInputAll = document.querySelectorAll("#search-options")
   searchInput.textContent = "";
-  if(optionsForInput){
-    optionsForInputAll.forEach(item => item.remove())
-  }
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
@@ -966,6 +993,7 @@ function createTopTenPage(e){
   createHeader()
   loadFavoriteCounter()
   createHeroSection(main)
+  setIntervalHero()
   subTitleHomePage(main)
   topTenCocktailsHeading(main)
   displayCocktailsName(cocktailsStage, main)
@@ -987,6 +1015,7 @@ function createAboutPage(e) {
     newApp.append(main)
 
     createHeader()
+    loadFavoriteCounter()
     aboutProfile()
     createFooter()
   
@@ -1050,7 +1079,7 @@ function aboutProfile() {
 
   const div4 = document.createElement("div")
   div4.className = "about-caption"
-  div4.textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  div4.textContent = "I am currently studying in the Digital Craft Web Development Program. I am passionate about coding and love the challenge of solving complex problems. As a resident of Houston, TX, I am inspired by the city's vibrant tech community and am excited about the potential opportunities in the field. I am eager to continue learning and expanding my skills in web development, and I look forward to contributing to the ever-evolving world of technology. My favorite drink is a refreshing mojito.."
   div3.appendChild(div4)
 
   const linkedinIcon2 = document.createElement("i")
@@ -1065,6 +1094,9 @@ function handleLinkIcon(e) {
   if(e.target.matches("#linkedinIcon")) {
       window.open('https://www.linkedin.com/in/christina-barron-9446b2262/', '_blank')
   }
+  if(e.target.matches("#linkedinIcon2")) {
+    window.open('https://www.linkedin.com/in/john-edward-garcia-ba897b1b0/', '_blank')
+  }
 }
 
 function handleGitHub(e) {
@@ -1076,20 +1108,16 @@ function handleGitHub(e) {
 
 function handleBtnClose(e) {
   const icon = document.querySelector("#icon");
-  const results = document.getElementById("#results")
+  const results = document.querySelector("#results")
   const toggleDrink = document.querySelector("#toggle-drink")
     if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
       icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
       setTimeout(()=> {
         if(results){
-          results.remove()
-      displayCocktailsName(cocktailsStage);
-      return
+          results.childNodes.forEach(item => item.remove())
         }
-        if(toggleDrink){
-          toggleDrink.remove()
-  
-          return
+        if(icon){
+          icon.remove()
         }
   
       },500)
