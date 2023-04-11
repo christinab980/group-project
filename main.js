@@ -348,6 +348,7 @@ const app = document.querySelector("#app")
     createHeader()
     loadFavoriteCounter()
     createHeroSection(main)
+    setIntervalHero()
     const cleanData = favoriteHeartStorage_data.map(item => {
       return getCleanDataFromSingleId(item.idDrink, favoriteHeartStorage_data)
     })
@@ -694,6 +695,7 @@ async function handleSearchButton(e) {
     
     createHeader()
     createHeroSection(main)
+    setIntervalHero()
     subTitleHomePage(main)
     createSearchPanel(main)
     createFooter()
@@ -968,6 +970,7 @@ function createTopTenPage(e){
   createHeader()
   loadFavoriteCounter()
   createHeroSection(main)
+  setIntervalHero()
   subTitleHomePage(main)
   topTenCocktailsHeading(main)
   displayCocktailsName(cocktailsStage, main)
@@ -1052,7 +1055,7 @@ function aboutProfile() {
 
   const div4 = document.createElement("div")
   div4.className = "about-caption"
-  div4.textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  div4.textContent = "I am currently studying in the Digital Craft Web Development Program. I am passionate about coding and love the challenge of solving complex problems. As a resident of Houston, TX, I am inspired by the city's vibrant tech community and am excited about the potential opportunities in the field. I am eager to continue learning and expanding my skills in web development, and I look forward to contributing to the ever-evolving world of technology. My favorite drink is a refreshing mojito.."
   div3.appendChild(div4)
 
   const linkedinIcon2 = document.createElement("i")
@@ -1066,6 +1069,9 @@ function aboutProfile() {
 function handleLinkIcon(e) {
   if(e.target.matches("#linkedinIcon")) {
       window.open('https://www.linkedin.com/in/christina-barron-9446b2262/', '_blank')
+  }
+  if(e.target.matches("#linkedinIcon2")) {
+    window.open('https://www.linkedin.com/in/john-edward-garcia-ba897b1b0/', '_blank')
   }
 }
 
