@@ -601,10 +601,6 @@ async function resultsFromInput(data) {
     localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
    
   });
-  // Fix Close btn
-  
-  // if the searched drink matches with any of the local S drinks then print remove favorite otherwise print add btn to favorite 
-  
 }
 
 // HEADER AND FOOTER 
@@ -737,7 +733,6 @@ async function doOptionsForInput(data) {
   const optionsForInput = document.querySelector("#search-options")
   const optionsForInputAll = document.querySelectorAll("#search-options")
   searchInput.textContent = "";
-
   await data.drinks.forEach((result) => {
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
