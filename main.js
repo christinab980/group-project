@@ -140,7 +140,6 @@ function handleCocktailClick(e) {
     const targetedCocktail = getClickedCocktaild(attribute);
     const targetedCocktail_tag = e.target;
     displayCocktails(targetedCocktail, targetedCocktail_tag);
-    console.log(targetedCocktail);
     // Render cocktail on the DOM
   }
 }
@@ -236,7 +235,6 @@ const shell = document.querySelector("#shell")
         cocktailSettings
       );
       const data = await response.json();
-      console.log(data)
       await resultsFromInput(data);
       searchInput.value = ""
     } catch (error) {
@@ -322,7 +320,6 @@ const heartNav = document.querySelector("#heart-nav-bar")
 const heartIcon = document.querySelectorAll("[favoritebtn]")
   // Pseudo element can not be targeted
   if(e.target.matches("[favoritebtn]")){
-    console.log(e.target.closest("[data-value]"))
     const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
@@ -338,7 +335,10 @@ function loadFavoriteCounter() {
   const heartNav = document.querySelector("#heart-nav-bar")
   const storageKeys = allStorage()
   storageKeys.forEach((item) => {
-    favoriteHeartStorage.push(item)
+    if(favoriteHeartStorage.includes(item)){
+      return
+    }
+      favoriteHeartStorage.push(item)
   })
   heartNav.textContent = storageKeys.length
 }
@@ -484,7 +484,9 @@ async function fetchDataFromLocalStorage(query){
         cocktailSettings
       );
       const data = await response.json();
+      if(!favoriteHeartStorage_data.some(item => item.strDrink === query)){
       favoriteHeartStorage_data.push(data.drinks[0])
+      }
     } catch (error) {
       console.log(error);
     }
@@ -499,7 +501,6 @@ async function handleSingleFavoriteCocktail(e) {
         cocktailSettings
       );
       const data = await response.json();
-      console.log(data)
       resultsFromInput(data)
     } catch (error) {
       console.log(error);
@@ -540,13 +541,18 @@ getPageData();
 
 async function resultsFromInput(data) {
   const main = document.querySelector("main")
-  const results = document.getElementById("results");
+  const result = document.querySelector("#results")
+  const singleResult = document.createElement("div");
+  singleResult.className = "results"
+  singleResult.id = "results-search"
+  result.append(singleResult)
   const localStorageValues = allStorage()
   await data.drinks.forEach((result) => {
     let myDrink = result;
     let ingredients = [];
     let count = 1;
-    results.dataset.value = myDrink.strDrink
+    singleResult.dataset.value = myDrink.strDrink
+
     
     for (let i in myDrink) {
       let ingredient = " ";
@@ -567,28 +573,29 @@ async function resultsFromInput(data) {
 
     const img = document.createElement("img")
     img.src = myDrink.strDrinkThumb
-    results.append(img)
+    singleResult.append(img)
+
 
     const h3 = document.createElement("h3")
     h3.textContent = myDrink.strDrink
     h3.dataset.value = myDrink.strDrink
-    results.append(h3)
+    singleResult.append(h3)
     
     const h4 = document.createElement("h4")
     h4.textContent = "Ingredients:"
-    results.append(h4)
+    singleResult.append(h4)
 
     const ul = document.createElement("ul")
     ul.className = "myDrinkIngredients"
-    results.append(ul)
+    singleResult.append(ul)
 
     const h4Instructions = document.createElement("h4")
     h4Instructions.textContent = "Instructions:"
-    results.append(h4Instructions)
+    singleResult.append(h4Instructions)
 
     const p = document.createElement("p")
     p.textContent = myDrink.strInstructions
-    results.append(p)
+    singleResult.append(p)
 
     let ingredientsCon = document.querySelector(".myDrinkIngredients");
     ingredients.forEach((item) => {
@@ -596,8 +603,9 @@ async function resultsFromInput(data) {
       listItem.innerText = item;
       ingredientsCon.append(listItem);
     })
-    main.append(results);
-    createCloseBtn(results)
+    main.append(singleResult);
+    createCloseBtn(singleResult)
+
     localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
    
   });
@@ -1108,13 +1116,12 @@ function handleGitHub(e) {
 
 function handleBtnClose(e) {
   const icon = document.querySelector("#icon");
-  const results = document.querySelector("#results")
-  const toggleDrink = document.querySelector("#toggle-drink")
+  const results = document.querySelector("#results-search")
     if(e.target.matches("#icon") || e.target.matches(".icon-arrow") ) {
       icon.classList == "icon" ? icon.classList = "icon open" : icon.classList = "icon" 
       setTimeout(()=> {
         if(results){
-          results.childNodes.forEach(item => item.remove())
+          results.remove()
         }
         if(icon){
           icon.remove()
