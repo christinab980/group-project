@@ -737,9 +737,12 @@ async function handleSearchButton(e) {
 async function doOptionsForInput(data) {
   const searchInput =  document.getElementById("search-input")
   const optionsForInput = document.querySelector("#search-options")
-  const optionsForInputAll = document.querySelectorAll("#search-options")
+  const optionsForInputAll = document.querySelectorAll("option")
   searchInput.textContent = "";
+  optionsForInputAll.forEach(option => option.remove())
+  data.drinks === null ? searchInput.classList = "wrong" : searchInput.classList = "search-input"
   await data.drinks.forEach((result) => {
+    console.log(result)
     if(result === null)return
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;

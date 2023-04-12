@@ -696,6 +696,19 @@ nav {
   border-bottom: 1px solid rgba(0,0,0,0.5);
   outline: none;
 }
+.wrong {
+  display: flex;
+  width: 90%;
+  padding: 5px;
+  padding-bottom: 2px;
+  line-height: 2;
+  border: none;
+  font-size: 1.2rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #cf1212;
+  border-bottom: 1px solid rgba(246, 0, 0, 0.5);
+  outline: none;
+}
 
 #search-icon-panel {
   color: #323232;
