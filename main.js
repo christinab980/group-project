@@ -193,8 +193,7 @@ const handleKeyUp = async (e) => {
   const searchOptions = document.querySelector("search-input")
   if(e.target.matches("#search-input")){
     const query = e.target.value.trim();
-    if (!query && query === "") {
-      searchOptions.innerHTML = "";
+    if (!query || query === "") {
       return;
     }
     try {
@@ -605,8 +604,7 @@ async function resultsFromInput(data) {
     })
     main.append(singleResult);
     createCloseBtn(singleResult)
-
-    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
+    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(singleResult) : createHeartBtn(singleResult)
    
   });
 }
@@ -742,6 +740,7 @@ async function doOptionsForInput(data) {
   const optionsForInputAll = document.querySelectorAll("#search-options")
   searchInput.textContent = "";
   await data.drinks.forEach((result) => {
+    if(result === null)return
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
     optionsForInput.appendChild(optionElement);
