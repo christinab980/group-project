@@ -552,6 +552,7 @@ async function resultsFromInput(data) {
     let ingredients = [];
     let count = 1;
     singleResult.dataset.value = myDrink.strDrink
+
     
     for (let i in myDrink) {
       let ingredient = " ";
@@ -573,6 +574,7 @@ async function resultsFromInput(data) {
     const img = document.createElement("img")
     img.src = myDrink.strDrinkThumb
     singleResult.append(img)
+
 
     const h3 = document.createElement("h3")
     h3.textContent = myDrink.strDrink
@@ -603,6 +605,7 @@ async function resultsFromInput(data) {
     })
     main.append(singleResult);
     createCloseBtn(singleResult)
+
     localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
    
   });
@@ -618,7 +621,7 @@ function createHeader() {
 
   const navTag = document.createElement("nav")
   const imgLogo = document.createElement("img")
-  imgLogo.src = "./img/logo.png"
+  imgLogo.src = "./img/cj_logo.png"
   imgLogo.alt = "Digital-crafts-news"
   imgLogo.id = "logo-home-page"
   header.append(imgLogo)
@@ -683,7 +686,7 @@ function createFooter() {
   const nav = document.createElement("nav")
 
   const imgLogo = document.createElement("img")
-  imgLogo.src = "./img/Logo.png"
+  imgLogo.src = "./img/cj_logo.png"
   imgLogo.id = "logo-home-page"
   imgLogo.alt = "Digital-crafts-news"
   firstDiv.append(imgLogo)
@@ -1055,7 +1058,7 @@ function aboutProfile() {
   groupMemberOne.appendChild(div)
 
   const profileImg = document.createElement("img")
-  profileImg.src = "./img/christina_Profile.png"
+  profileImg.src = "./img/christinaBarron_Profile.png"
   profileImg.alt = "Christina Profile Picture"
   div.appendChild(profileImg)
   
@@ -1078,7 +1081,7 @@ function aboutProfile() {
   groupMemberTwo.appendChild(div3)
 
   const profileImg2 = document.createElement("img")
-  profileImg2.src = "./img/john.png"
+  profileImg2.src = "./img/john_garcia.png"
   profileImg2.alt = "John Garcia Profile Picture"
   div3.appendChild(profileImg2)
 
