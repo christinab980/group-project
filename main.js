@@ -140,7 +140,6 @@ function handleCocktailClick(e) {
     const targetedCocktail = getClickedCocktaild(attribute);
     const targetedCocktail_tag = e.target;
     displayCocktails(targetedCocktail, targetedCocktail_tag);
-    console.log(targetedCocktail);
     // Render cocktail on the DOM
   }
 }
@@ -236,7 +235,6 @@ const shell = document.querySelector("#shell")
         cocktailSettings
       );
       const data = await response.json();
-      console.log(data)
       await resultsFromInput(data);
       searchInput.value = ""
     } catch (error) {
@@ -322,7 +320,6 @@ const heartNav = document.querySelector("#heart-nav-bar")
 const heartIcon = document.querySelectorAll("[favoritebtn]")
   // Pseudo element can not be targeted
   if(e.target.matches("[favoritebtn]")){
-    console.log(e.target.closest("[data-value]"))
     const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
@@ -338,7 +335,10 @@ function loadFavoriteCounter() {
   const heartNav = document.querySelector("#heart-nav-bar")
   const storageKeys = allStorage()
   storageKeys.forEach((item) => {
-    favoriteHeartStorage.push(item)
+    if(favoriteHeartStorage.includes(item)){
+      return
+    }
+      favoriteHeartStorage.push(item)
   })
   heartNav.textContent = storageKeys.length
 }
@@ -484,7 +484,9 @@ async function fetchDataFromLocalStorage(query){
         cocktailSettings
       );
       const data = await response.json();
+      if(!favoriteHeartStorage_data.some(item => item.strDrink === query)){
       favoriteHeartStorage_data.push(data.drinks[0])
+      }
     } catch (error) {
       console.log(error);
     }
@@ -499,7 +501,6 @@ async function handleSingleFavoriteCocktail(e) {
         cocktailSettings
       );
       const data = await response.json();
-      console.log(data)
       resultsFromInput(data)
     } catch (error) {
       console.log(error);
