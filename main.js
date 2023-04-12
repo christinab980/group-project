@@ -605,6 +605,7 @@ async function resultsFromInput(data) {
     main.append(singleResult);
     createCloseBtn(singleResult)
     localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(singleResult) : createHeartBtn(singleResult)
+
    
   });
 }
