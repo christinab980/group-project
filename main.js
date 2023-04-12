@@ -193,8 +193,7 @@ const handleKeyUp = async (e) => {
   const searchOptions = document.querySelector("search-input")
   if(e.target.matches("#search-input")){
     const query = e.target.value.trim();
-    if (!query && query === "") {
-      searchOptions.innerHTML = "";
+    if (!query || query === "") {
       return;
     }
     try {
@@ -605,8 +604,8 @@ async function resultsFromInput(data) {
     })
     main.append(singleResult);
     createCloseBtn(singleResult)
+    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(singleResult) : createHeartBtn(singleResult)
 
-    localStorageValues.includes(data.drinks[0].strDrink) ? createRemoveFavorite(results) : createHeartBtn(results)
    
   });
 }
@@ -739,9 +738,13 @@ async function handleSearchButton(e) {
 async function doOptionsForInput(data) {
   const searchInput =  document.getElementById("search-input")
   const optionsForInput = document.querySelector("#search-options")
-  const optionsForInputAll = document.querySelectorAll("#search-options")
+  const optionsForInputAll = document.querySelectorAll("option")
   searchInput.textContent = "";
+  optionsForInputAll.forEach(option => option.remove())
+  data.drinks === null ? searchInput.classList = "wrong" : searchInput.classList = "search-input"
   await data.drinks.forEach((result) => {
+    console.log(result)
+    if(result === null)return
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
     optionsForInput.appendChild(optionElement);
