@@ -742,9 +742,8 @@ async function doOptionsForInput(data) {
   searchInput.textContent = "";
   optionsForInputAll.forEach(option => option.remove())
   data.drinks === null ? searchInput.classList = "wrong" : searchInput.classList = "search-input"
+  if(data.drinks === null) return
   await data.drinks.forEach((result) => {
-    console.log(result)
-    if(result === null)return
     const optionElement = document.createElement("option");
     optionElement.value = result.strDrink;
     optionsForInput.appendChild(optionElement);
