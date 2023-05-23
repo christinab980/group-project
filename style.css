@@ -840,13 +840,21 @@ nav {
   footer {
     margin-top: 10%;
     display: flex;
-    flex-wrap: wrap;
+    gap: 10px;
+    flex-direction: column;
   }
 
   .footer-inner {
     font-size: 16px;
-    margin-left: auto;
     margin-bottom: 0;
+  }
+
+  .socials {
+    justify-content: center;
+  }
+
+  .gitHubIcon {
+    margin: 0;
   }
 
   form {
