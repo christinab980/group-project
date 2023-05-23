@@ -321,6 +321,7 @@ const heartIcon = document.querySelectorAll("[favoritebtn]")
   if(e.target.matches("[favoritebtn]")){
     const attribute = e.target.closest("[data-value]").dataset.value
     const localStorageDrinks = allStorage()
+    console.log(localStorageDrinks)
     const isDrinkInFavorites = localStorageDrinks.includes(`${attribute}`)
     if(!isDrinkInFavorites){
       heartNav.textContent = 1 + localStorageDrinks.length
@@ -356,6 +357,7 @@ const app = document.querySelector("#app")
     loadFavoriteCounter()
     createHeroSection(main)
     setIntervalHero()
+    console.log(favoriteHeartStorage_data)
     const cleanData = favoriteHeartStorage_data.map(item => {
       return getCleanDataFromSingleId(item.idDrink, favoriteHeartStorage_data)
     })
@@ -513,6 +515,9 @@ function handleRemoveFavoriteDrink(e) {
   if(e.target.matches(".fa-heart-circle-minus")){
     const node = e.target.parentNode.parentNode
     const targetText = e.target.parentNode.parentNode.dataset.name
+    const updatedFavoriteStage = favoriteHeartStorage_data.filter(item => targetText !== item.strDrink)
+    favoriteHeartStorage_data = [];
+    favoriteHeartStorage_data = updatedFavoriteStage;
     node.remove()
     localStorage.removeItem(`${targetText}`)
     heartNav.textContent = storageKeys.length - 1
