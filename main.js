@@ -1053,7 +1053,7 @@ function aboutProfile() {
   main.append(heading)
 
   const groupMemberOne = document.createElement("section")
-  groupMemberOne.className = "group-member-1"
+  groupMemberOne.className = "group-member-1 padding-sides"
   main.append(groupMemberOne)
 
   const div = document.createElement("div")
@@ -1076,11 +1076,11 @@ function aboutProfile() {
   div2.append(linkedinIcon) 
 
   const groupMemberTwo = document.createElement("section")
-  groupMemberTwo.className = "group-member-2"
+  groupMemberTwo.className = "group-member-2 padding-sides"
   main.appendChild(groupMemberTwo)
 
   const div3 = document.createElement("div")
-  div3.className = "about-picture"
+  div3.classList = "about-picture"
   groupMemberTwo.appendChild(div3)
 
   const profileImg2 = document.createElement("img")
